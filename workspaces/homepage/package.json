@@ -1,0 +1,51 @@
+{
+  "private": true,
+  "name": "homepage",
+  "description": "Varys homepage",
+  "version": "1.0.0",
+  "author": "Jeroen Knoops <jeroen.knoops@philips.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/philips-internal/varys.git"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "dependencies": {
+    "@confluenza/gatsby-theme-confluenza": "^1.0.18",
+    "@emotion/core": "^10.0.15",
+    "@emotion/styled": "^10.0.15",
+    "gatsby": "^2.18.11",
+    "gatsby-plugin-catch-links": "^2.1.21",
+    "gatsby-plugin-emotion": "^4.1.18",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-helmet": "^5.2.1",
+    "react-media": "^1.9.2"
+  },
+  "keywords": [
+    "gatsby",
+    "varys",
+    "markdown"
+  ],
+  "license": "MIT",
+  "main": "n/a",
+  "scripts": {
+    "build": "gatsby build",
+    "clean": "gatsby clean",
+    "now-build": "(cd ../../ && yarn build) && yarn build",
+    "develop": "gatsby develop",
+    "format": "prettier --trailing-comma es5 --no-semi --single-quote --write \"src/**/*.js\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.2",
+    "babel-plugin-emotion": "^10.0.15",
+    "eslint": "^6.7.2",
+    "eslint-config-react-app": "^5.1.0",
+    "eslint-plugin-react-hooks": "^2.3.0",
+    "gatsby-cli": "^2.8.18",
+    "gatsby-plugin-root-import": "^2.0.5",
+    "jest-emotion": "^10.0.26"
+  }
+}

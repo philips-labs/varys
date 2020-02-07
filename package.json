@@ -1,0 +1,54 @@
+{
+  "private": true,
+  "devDependencies": {
+    "@babel/cli": "^7.7.5",
+    "@babel/core": "^7.7.5",
+    "@babel/plugin-proposal-class-properties": "^7.7.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.7.4",
+    "@babel/preset-env": "^7.7.6",
+    "@babel/preset-react": "^7.7.4",
+    "babel-eslint": "^10.0.2",
+    "babel-jest": "^24.8.0",
+    "babel-plugin-emotion": "^10.0.15",
+    "eslint": "^6.7.2",
+    "eslint-plugin-react-hooks": "^2.3.0",
+    "gatsby": "^2.18.11",
+    "gzip-size": "^5.1.1",
+    "jest": "^24.8.0",
+    "jest-emotion": "^10.0.26",
+    "lerna": "^3.19.0",
+    "pretty-bytes": "^5.3.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "standard": "^14.3.1"
+  },
+  "workspaces": {
+    "packages": [
+      "workspaces/*"
+    ]
+  },
+  "scripts": {
+    "test": "yarn lint && yarn jest --passWithNoTests",
+    "test:watch": "yarn jest --watch",
+    "lint": "yarn standard",
+    "lint:fix": "yarn standard --fix --verbose",
+    "build": "yarn lerna run build",
+    "deploy": "yarn lerna run build --ignore homepage && yarn lerna run build --scope homepage"
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "ignore": [
+      "workspaces/homepage/public/**",
+      "**/node_modules/**",
+      "**/lib/**",
+      "**/es/**",
+      "**/iife/**"
+    ],
+    "envs": [
+      "es6",
+      "browser",
+      "jest"
+    ]
+  }
+}
