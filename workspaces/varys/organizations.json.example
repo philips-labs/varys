@@ -1,0 +1,11 @@
+{
+  "organizations": [
+    { 
+      "name": "philips-software", 
+      "id": 12321 
+    },
+    { "name": "philips-labs", 
+      "id": 12323 
+    }
+  ]
+}
