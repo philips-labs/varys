@@ -5,11 +5,13 @@ const chalk = require('chalk')
 
 const { showRepositories } = require('./commands/show-repositories-graphql')
 const { showUsers } = require('./commands/show-users-graphql')
+const { addUser } = require('./commands/add-user-graphql')
 
 const defaultConfigFileName = 'organizations.json'
 
 const {
-  infoMessage
+  infoMessage,
+  errorMessage
 } = require('./logger/logger')
 
 program
@@ -17,6 +19,25 @@ program
   // .option('-c, --config <file>', 'set config path. defaults to organizations.json');
 
 const config = require(`../${defaultConfigFileName}`)
+
+program
+  .command('add-user')
+  .alias('au')
+  .description('Lord Varys can do anything....for societies')
+  .option("-o, --organization <organization-name>", "To which organization")
+  .option("-u, --user <user-name>", "Which user")
+  .option("-t, --team <team-name>", "Which team (optional)")
+  .action(function (options) {
+    infoMessage(chalk`add user`)
+    if (!options.organization || !options.user) { 
+      errorMessage(chalk`missing parameter`)
+      this.help() 
+      return 1
+    }
+    const team = options.team || ""
+    infoMessage(chalk`${options.organization} / ${options.user} / ${team}`)
+    addUser(config)
+  })
 
 program
   .command('show-repositories')
