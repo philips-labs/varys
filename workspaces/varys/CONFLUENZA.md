@@ -10,10 +10,34 @@ In order to run this project, you should have installed:
 - Node installed (we used node v12.2.0)
 - yarn  (we used version v1.19.0)
 
+### Config
+
+This tool needs a configuration file with the organization setup:
+
+Example: `organizations.json`
+```
+{
+  "organizations": [
+    { 
+      "name": "philips-software", 
+      "id": 12321 
+    },
+    { "name": "philips-labs", 
+      "id": 12323 
+    }
+  ]
+}
+```
 ## Usage
 ```
-yarn varys [options]
+yarn varys [commands] [options]
 ```
+
+### Supported commands:
+
+| Command              | Alias | Functionality
+| ---------------------|:-----:| -------------------------------------
+| show-repositories    | sr    | Shows info about repositories 
 
 ### Supported options:
 
