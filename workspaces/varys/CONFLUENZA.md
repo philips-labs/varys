@@ -17,13 +17,12 @@ This tool needs a configuration file with the organization setup:
 Example: `organizations.json`
 ```
 {
+  "githubToken": "github token hoes here",
   "organizations": [
     { 
-      "name": "philips-software", 
-      "id": 12321 
+      "name": "philips-software"
     },
-    { "name": "philips-labs", 
-      "id": 12323 
+    { "name": "philips-labs"
     }
   ]
 }
