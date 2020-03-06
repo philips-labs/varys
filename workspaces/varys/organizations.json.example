@@ -1,4 +1,5 @@
 {
+  "githubToken": "<awesome-token-here>",
   "organizations": [
     { 
       "name": "philips-software", 

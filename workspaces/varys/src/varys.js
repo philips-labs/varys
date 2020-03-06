@@ -3,7 +3,7 @@
 const program = require('commander')
 const chalk = require('chalk')
 
-const { showRepositories } = require('./commands/show-repositories')
+const { showRepositories } = require('./commands/show-repositories-graphql')
 
 const defaultConfigFileName = 'organizations.json'
 
