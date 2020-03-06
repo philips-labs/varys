@@ -37,6 +37,7 @@ yarn varys [commands] [options]
 | Command              | Alias | Functionality
 | ---------------------|:-----:| -------------------------------------
 | show-repositories    | sr    | Shows info about repositories 
+| show-users           | su    | Shows info about users 
 
 ### Supported options:
 
