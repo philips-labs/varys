@@ -34,9 +34,7 @@ program
       this.help() 
       return 1
     }
-    const team = options.team || ""
-    infoMessage(chalk`${options.organization} / ${options.user} / ${team}`)
-    addUser(config)
+    addUser(config, options)
   })
 
 program
