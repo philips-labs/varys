@@ -7,6 +7,7 @@ const {
 } = require('../logger/logger')
 
 let token
+let userId
 
 const checkOrganization = ({organizations}, organization) => {
   for (const ourOrganization of organizations) {
@@ -30,6 +31,9 @@ const fetchUser = async ( name, organization ) => {
     `
       query userOrganization($user: String!, $organization: String!) {
         user(login:$user) {
+          id
+          name
+          email
           organization(login:$organization) {
             name
           }
@@ -45,27 +49,27 @@ const fetchUser = async ( name, organization ) => {
     process.exit(1)
   }
 }
+
 const checkUser = async (user, organization) => {
   organizationUser = await fetchUser(user, organization)
+  const {name, email} = organizationUser.user
+  userId = organizationUser.user.id
+
   if (organizationUser.user.organization) {
-    errorMessage(chalk`User (${user}) is already part of Organization (${organization})`)
+    errorMessage(chalk`User (${user} / ${email} / ${name} / #{userId}) is already part of Organization (${organization})`)
     process.exit(1)
   }
-  infoMessage(chalk`User (${user}) is known and NOT yet member of Organization (${organization}).`)
+  infoMessage(chalk`User (${user} / ${email} / ${name} / ${userId}) is known and NOT yet member of Organization (${organization}).`)
 }
 
 const checkTeam = async (team, organization) => {
-  console.log(team)
-  console.log(organization)
-  errorMessage(chalk`Team is not known in github`)
-  process.exit(1)
+  infoMessage(chalk`Team not implemented yet`)
 }
 
 const addUser = async (config, {organization, user, team}) => {
   token = config.githubToken
-  infoMessage(chalk`add users implementation`)
   team = team || ""
-  infoMessage(chalk`${organization} / ${user} / ${team}`)
+  infoMessage(chalk`Add User for: ${organization} / ${user} / ${team}`)
 
   checkOrganization(config, organization)
   await checkUser(user, organization)
