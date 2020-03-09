@@ -1,6 +1,7 @@
 const chalk = require('chalk')
 const { graphql } = require('@octokit/graphql')
 const inquirer = require('inquirer')
+const { Octokit } = require('@octokit/rest')
 
 const {
   infoMessage,
@@ -8,7 +9,6 @@ const {
 } = require('../logger/logger')
 
 let token
-let userId
 
 const checkOrganization = ({ organizations }, organization) => {
   for (const ourOrganization of organizations) {
@@ -53,14 +53,13 @@ const fetchUser = async (name, organization) => {
 
 const checkUser = async (user, organization) => {
   const organizationUser = await fetchUser(user, organization)
-  const { name, email } = organizationUser.user
-  userId = organizationUser.user.id
+  const { name, email, id } = organizationUser.user
 
   if (organizationUser.user.organization) {
-    errorMessage(chalk`User (${user} / ${email} / ${name} / #{userId}) is already part of Organization (${organization})`)
+    errorMessage(chalk`User (${user} / ${email} / ${name} / #{id}) is already part of Organization (${organization})`)
     process.exit(1)
   }
-  infoMessage(chalk`User (${user} / ${email} / ${name} / ${userId}) is known and NOT yet member of Organization (${organization}).`)
+  infoMessage(chalk`User (${user} / ${email} / ${name} / ${id}) is known and NOT yet member of Organization (${organization}).`)
 }
 
 const checkTeam = (team, organization) => {
@@ -86,8 +85,19 @@ const verify = async () => {
   }
 }
 
-const processAction = () => {
-  infoMessage(chalk`process not implemented yet`)
+const processAction = async (username, organization) => {
+  infoMessage(chalk`Add ${username} to ${organization}`)
+  const octokit = new Octokit({
+    auth: token
+  })
+
+  const { data } = await octokit.orgs.addOrUpdateMembership({
+    org: organization,
+    username: username,
+    role: 'member'
+  })
+  infoMessage(chalk`Added ${username} to ${organization}`)
+  console.log(data)
 }
 
 const addUser = async (config, { organization, user, team }) => {
@@ -96,10 +106,10 @@ const addUser = async (config, { organization, user, team }) => {
   infoMessage(chalk`Add User for: ${organization} / ${user} / ${team}`)
 
   checkOrganization(config, organization)
-  await checkUser(user, organization)
+  userId = await checkUser(user, organization)
   checkTeam(team, organization)
   await verify()
-  processAction()
+  await processAction(user, organization)
 }
 
 module.exports = {
