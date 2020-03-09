@@ -26,6 +26,7 @@
     "commander": "^2.19.0",
     "csvtojson": "^2.0.8",
     "fs-extra": "^7.0.1",
+    "inquirer": "^7.0.6",
     "standard": "^14.3.1"
   },
   "jest": {

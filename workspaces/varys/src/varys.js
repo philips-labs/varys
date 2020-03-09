@@ -24,14 +24,14 @@ program
   .command('add-user')
   .alias('au')
   .description('Lord Varys can do anything....for societies')
-  .option("-o, --organization <organization-name>", "To which organization")
-  .option("-u, --user <user-name>", "Which user")
-  .option("-t, --team <team-name>", "Which team (optional)")
+  .option('-o, --organization <organization-name>', 'To which organization')
+  .option('-u, --user <user-name>', 'Which user')
+  .option('-t, --team <team-name>', 'Which team (optional)')
   .action(function (options) {
     infoMessage(chalk`add user`)
-    if (!options.organization || !options.user) { 
+    if (!options.organization || !options.user) {
       errorMessage(chalk`missing parameter`)
-      this.help() 
+      this.help()
       return 1
     }
     addUser(config, options)
