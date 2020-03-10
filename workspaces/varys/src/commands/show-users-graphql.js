@@ -57,7 +57,7 @@ const showUsers = async (config) => {
   for (const organization of config.organizations) {
     let organizationUsers = []
     infoMessage(chalk`{blue organization: } ${organization.name}`)
-    organizationUsers = await fetchUsers(organization, config.githubTokenj)
+    organizationUsers = await fetchUsers(organization)
     organizations.push({
       organizationName: organization.name,
       users: organizationUsers
