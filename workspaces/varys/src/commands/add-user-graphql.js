@@ -2,6 +2,7 @@ const chalk = require('chalk')
 const { graphql } = require('@octokit/graphql')
 const inquirer = require('inquirer')
 const { Octokit } = require('@octokit/rest')
+const Slack = require('slack')
 
 const {
   infoMessage,
@@ -9,6 +10,7 @@ const {
 } = require('../logger/logger')
 
 let token
+let slackToken
 
 const checkOrganization = ({ organizations }, organization) => {
   for (const ourOrganization of organizations) {
@@ -56,7 +58,7 @@ const checkUser = async (user, organization) => {
   const { name, email, id } = organizationUser.user
 
   if (organizationUser.user.organization) {
-    errorMessage(chalk`User (${user} / ${email} / ${name} / #{id}) is already part of Organization (${organization})`)
+    errorMessage(chalk`User (${user} / ${email} / ${name} / ${id}) is already part of Organization (${organization})`)
     process.exit(1)
   }
   infoMessage(chalk`User (${user} / ${email} / ${name} / ${id}) is known and NOT yet member of Organization (${organization}).`)
@@ -97,11 +99,20 @@ const processAction = async (username, organization) => {
     role: 'member'
   })
   infoMessage(chalk`Added ${username} to ${organization}`)
+
+  const bot = new Slack(slackToken)
+  var result = await bot.chat.postMessage({
+    channel: '#royal-philips', 
+    text: `Added *${username}* to *${organization}*`,
+    token: slackToken}
+  )
   console.log(data)
 }
 
 const addUser = async (config, { organization, user, team }) => {
   token = config.githubToken
+  slackToken = config.slackToken
+
   team = team || ''
   infoMessage(chalk`Add User for: ${organization} / ${user} / ${team}`)
 
