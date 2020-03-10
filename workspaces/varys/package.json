@@ -27,6 +27,7 @@
     "csvtojson": "^2.0.8",
     "fs-extra": "^7.0.1",
     "inquirer": "^7.0.6",
+    "slack": "^11.0.2",
     "standard": "^14.3.1"
   },
   "jest": {
