@@ -58,11 +58,11 @@ const fetchRepositories = async ({ name }) => {
   }
 }
 const displayRepository = (organizationName, repository) => {
-  console.log(`${organizationName} | ${repository.name} | ${repository.url} | ${repository.isPrivate} | ${repository.object && repository.object.history.totalCount} | N/A | `)
+  console.log(`${organizationName}|${repository.name}|${repository.url}|${repository.isPrivate}|${repository.object && repository.object.history.totalCount}|N/A`)
 }
 
 const displayRepositories = async (organizations) => {
-  console.log('organization | reposiitory name | repository url | isPrivate | # commits | # contributors |')
+  console.log('organization|reposiitory name|repository url|isPrivate|# commits|# contributors')
   for (const organization of organizations) {
     const { repositories } = await organization.repositories.organization
     for (const repository of repositories.nodes) {

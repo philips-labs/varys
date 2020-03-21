@@ -40,11 +40,11 @@ const displayUser = (organizationName, users) => {
   const pendingUsers = users.pendingMembers.totalCount
   const total = assignedUsers + pendingUsers
 
-  console.log(`${organizationName} | ${total} | ${assignedUsers} | ${pendingUsers}`)
+  console.log(`${organizationName}|${total}|${assignedUsers}|${pendingUsers}`)
 }
 
 const display = async (organizations) => {
-  console.log('Organization | # users | # assigned-users | # pending-users')
+  console.log('Organization|# users|# assigned-users|# pending-users')
   for (const organization of organizations) {
     const users = await organization.users.organization
     displayUser(organization.organizationName, users)
