@@ -15,11 +15,11 @@ let slackToken
 const checkOrganization = ({ organizations }, organization) => {
   for (const ourOrganization of organizations) {
     if (ourOrganization.name === organization) {
-      infoMessage(chalk`Organization (${organization}) is part of our organizations!`)
+      infoMessage(chalk`Organization (${chalk.green(organization)}) is part of our organizations!`)
       return
     }
   }
-  errorMessage(chalk`Organization (${organization}) is not part of our organizations`)
+  errorMessage(chalk`Organization (${chalk.green(organization)}) is not part of our organizations`)
   process.exit(1)
 }
 
@@ -58,11 +58,43 @@ const checkUser = async (user, organization) => {
   const { name, email, id } = organizationUser.user
 
   if (organizationUser.user.organization) {
-    errorMessage(chalk`User (${user} / ${email} / ${name} / ${id}) is already part of Organization (${organization})`)
+    errorMessage(chalk`User (${chalk.yellow(user)} / ${chalk.yellow(email)} / ${chalk.yellow(name)} / ${chalk.yellow(id)}) is already part of Organization (${chalk.green(organization)})`)
     process.exit(1)
   }
-  infoMessage(chalk`User (${user} / ${email} / ${name} / ${id}) is known and NOT yet member of Organization (${organization}).`)
+  infoMessage(chalk`User (${chalk.yellow(user)} / ${chalk.yellow(email)} / ${chalk.yellow(name)} / ${chalk.yellow(id)}) is known and NOT yet member of Organization (${chalk.green(organization)}).`)
 }
+
+const checkAlreadyInvited = async (username, organization) => {
+  const octokit = new Octokit({
+    auth: token
+  })
+
+  const { data } = await octokit.orgs.listPendingInvitations({
+    org: organization
+  })
+  infoMessage(chalk`${chalk.yellow(data.length)} users are invited to ${chalk.green(organization)}`)
+
+  if (data.length > 0) {
+    const invitedMember = data.filter(invitedMember => invitedMember.login === username)
+    if (invitedMember.length > 0) {
+      errorMessage(chalk`${chalk.yellow(username)} is already invited to ${chalk.green(organization)} by ${chalk.yellow(invitedMember[0].inviter.login)} on ${chalk.yellow(invitedMember[0].created_at)}`)
+      process.exit(1)
+    } else {
+      infoMessage(chalk`${chalk.green(username)} is not yet invited to ${chalk.green(organization)}`)
+    }
+  }
+}
+
+const checkBlocked = async (username, organization) => {
+  infoMessage(chalk`checkBlocked not implemented yet`)
+  return 
+  // const { data } = await octokit.orgs.checkBlockedUser({
+  //  org: organization,
+  //  username: username
+  //});
+  //console.log(data)
+}
+
 
 const checkTeam = (team, organization) => {
   infoMessage(chalk`Team not implemented yet`)
@@ -88,7 +120,7 @@ const verify = async () => {
 }
 
 const processAction = async (username, organization) => {
-  infoMessage(chalk`Add ${username} to ${organization}`)
+  infoMessage(chalk`Add ${chalk.yellow(username)} to ${chalk.green(organization)}`)
   const octokit = new Octokit({
     auth: token
   })
@@ -98,7 +130,7 @@ const processAction = async (username, organization) => {
     username: username,
     role: 'member'
   })
-  infoMessage(chalk`Added ${username} to ${organization}`)
+  infoMessage(chalk`Added ${chalk.yellow(username)} to ${chalk.green(organization)}`)
 
   const bot = new Slack(slackToken)
   var result = await bot.chat.postMessage({
@@ -114,10 +146,12 @@ const addUser = async (config, { organization, user, team }) => {
   slackToken = config.slackToken
 
   team = team || ''
-  infoMessage(chalk`Add User for: ${organization} / ${user} / ${team}`)
+  infoMessage(chalk`Add user for: ${chalk.green(organization)} / ${chalk.yellow(user)} / ${chalk.yellow(team)}`)
 
   checkOrganization(config, organization)
-  userId = await checkUser(user, organization)
+  await checkUser(user, organization)
+  await checkAlreadyInvited(user, organization)
+  await checkBlocked(user, organization)
   checkTeam(team, organization)
   await verify()
   await processAction(user, organization)
