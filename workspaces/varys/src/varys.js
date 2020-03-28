@@ -6,6 +6,7 @@ const chalk = require('chalk')
 const { showRepositories } = require('./commands/show-repositories-graphql')
 const { showUsers } = require('./commands/show-users-graphql')
 const { addUser } = require('./commands/add-user-graphql')
+const { checkSystemTeam } = require('./commands/check-system-team')
 
 const defaultConfigFileName = 'organizations.json'
 
@@ -23,7 +24,7 @@ const config = require(`../${defaultConfigFileName}`)
 program
   .command('add-user')
   .alias('au')
-  .description('Lord Varys can do anything....for societies')
+  .description('Lord Varys can do anything.... f.e. add people')
   .option('-o, --organization <organization-name>', 'To which organization')
   .option('-u, --user <user-name>', 'Which user')
   .option('-t, --team <team-name>', 'Which team (optional)')
@@ -53,6 +54,15 @@ program
   .action(function (env) {
     infoMessage(chalk`show users`)
     showUsers(config)
+  })
+
+program
+  .command('check-system-team')
+  .alias('cst')
+  .description('Lord Varys wants to knows everything....so installs birdies')
+  .action(function (env) {
+    infoMessage(chalk`check system team`)
+    checkSystemTeam(config)
   })
 
 program.parse(process.argv)

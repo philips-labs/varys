@@ -1,0 +1,36 @@
+Show all repositories from team System Team with the branch protectionsRules
+
+{
+  organization(login: "philips-internal") {
+    teams(query: "System team", first: 100) {
+      nodes {
+        name
+        privacy
+        repositories(first: 100) {
+          totalCount
+          nodes {
+            name
+            branchProtectionRules(first: 5) {
+              nodes {
+                pattern
+                pushAllowances(first: 2) {
+                  nodes {                   
+                    team:actor {
+                      ... on Team {
+                        name
+                      }
+                    }
+                    branchProtectionRule {
+                      restrictsPushes
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
