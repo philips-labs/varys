@@ -1,11 +1,10 @@
 const chalk = require('chalk')
+const columnify = require('columnify')
 const { graphql } = require('@octokit/graphql')
 
 const { infoMessage } = require('../logger')
 
-let token
-
-const fetchUsers = async ({ name }) => {
+const fetchUsers = async ({ name, token }) => {
   const graphqlWithAuth = graphql.defaults({
     headers: {
       authorization: `token ${token}`
@@ -48,13 +47,20 @@ const display = async organizations => {
   }
 }
 
-const showUsers = async config => {
-  token = config.githubToken
+const showUsers = async (config, filterOrgs) => {
   const organizations = []
-  for (const organization of config.organizations) {
+  const fetchOrgs =
+    filterOrgs.length > 0
+      ? filterOrgs.map(org => ({ name: org }))
+      : config.organizations
+
+  for (const organization of fetchOrgs) {
     let organizationUsers = []
     infoMessage(chalk`{blue organization: } ${organization.name}`)
-    organizationUsers = await fetchUsers(organization)
+    organizationUsers = await fetchUsers({
+      ...organization,
+      token: config.githubToken
+    })
     organizations.push({
       organizationName: organization.name,
       users: organizationUsers
