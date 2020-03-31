@@ -1,3 +1,3 @@
 module.exports = {
-  defaultConfiguration: require(`../organizations.json`)
-};
+  defaultConfiguration: require('../organizations.json')
+}

@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
-"use strict";
+'use strict'
 
-const program = require("commander");
-const pkg = require("../package.json");
+const program = require('commander')
+const pkg = require('../package.json')
 
 program
   .version(pkg.version)
   .description(pkg.description)
-  .command("users", "whispers secrets about your users.")
-  .command("repos", "whispers secrets about your repositories.")
-  .parse(process.argv);
+  .command('users', 'whispers secrets about your users.')
+  .command('repos', 'whispers secrets about your repositories.')
+  .parse(process.argv)

@@ -1,22 +1,22 @@
 #!/usr/bin/env node
 
-"use strict";
+'use strict'
 
-const program = require("commander");
-const chalk = require("chalk");
+const program = require('commander')
+const chalk = require('chalk')
 
-const pkg = require("../package.json");
+const pkg = require('../package.json')
 const {
   config: { defaultConfiguration },
   logger: { infoMessage },
-  commands: { showUsers }
-} = require("../lib");
+  commands: { showUsers },
+} = require('../lib')
 
 program
   .version(pkg.version)
   .description(pkg.description)
   .action(function(env) {
-    infoMessage(chalk`show users`);
-    showUsers(defaultConfiguration);
+    infoMessage(chalk`show users`)
+    showUsers(defaultConfiguration)
   })
-  .parse(process.argv);
+  .parse(process.argv)

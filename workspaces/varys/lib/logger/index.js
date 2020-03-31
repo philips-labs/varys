@@ -2,7 +2,7 @@ const chalk = require('chalk')
 
 let verbose = false
 
-const setVerbose = (newVerboseValue) => {
+const setVerbose = newVerboseValue => {
   verbose = newVerboseValue
 }
 
