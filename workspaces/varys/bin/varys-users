@@ -1,0 +1,16 @@
+#!/usr/bin/env node
+
+"use strict";
+
+const program = require("commander");
+
+const pkg = require("../package.json");
+
+program
+  .version(pkg.version)
+  .description(pkg.description)
+  .command("add <user> [otherUsers]", "adds 1 or multiple users user.")
+  .alias("au")
+  .command("show", "shows users.")
+  .alias("su")
+  .parse(process.argv);

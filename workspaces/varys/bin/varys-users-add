@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+
+"use strict";
+
+const program = require("commander");
+const chalk = require("chalk");
+
+const pkg = require("../package.json");
+const { infoMessage, errorMessage } = require("../lib/logger/logger");
+const { addUser } = require("../lib/commands/add-user-graphql");
+const { defaultConfiguration } = require("../lib/config");
+
+program
+  .version(pkg.version)
+  .description(pkg.description)
+  .option("-o, --organization <organization-name>", "To which organization")
+  .option("-t, --team <team-name>", "Which team (optional)")
+  .action(function(options) {
+    infoMessage(chalk`add user`);
+    if (!options.organization || !options.user) {
+      errorMessage(chalk`missing parameter`);
+      this.help();
+      return 1;
+    }
+    addUser(defaultConfiguration, options);
+  })
+  .parse(process.argv);
