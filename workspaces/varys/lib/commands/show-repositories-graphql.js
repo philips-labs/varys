@@ -72,9 +72,14 @@ const displayRepositories = async organizations => {
   }
 }
 
-const showRepositories = async config => {
+const showRepositories = async (config, filterOrgs) => {
   const organizations = []
-  for (const organization of config.organizations) {
+  const fetchOrgs =
+    filterOrgs.length > 0
+      ? filterOrgs.map(org => ({ name: org }))
+      : config.organizations
+
+  for (const organization of fetchOrgs) {
     let organizationRepositories = []
     infoMessage(chalk`{blue organization: } ${organization.name}`)
     organizationRepositories = await fetchRepositories({

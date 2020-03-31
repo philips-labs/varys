@@ -9,14 +9,15 @@ const pkg = require('../package.json')
 const {
   config: { defaultConfiguration },
   logger: { infoMessage },
-  commands: { showRepositories },
+  commands: { showRepositories }
 } = require('../lib')
 
 program
   .version(pkg.version)
   .description(pkg.description)
-  .action(function(env) {
+  .arguments('[organizations...]')
+  .action(function(organizations) {
     infoMessage(chalk`show repositories`)
-    showRepositories(defaultConfiguration)
+    showRepositories(defaultConfiguration, organizations)
   })
   .parse(process.argv)
