@@ -15,13 +15,17 @@ program
   .description(pkg.description)
   .option("-o, --organization <organization-name>", "To which organization")
   .option("-t, --team <team-name>", "Which team (optional)")
-  .action(function(options) {
+  .arguments("<user> [otherUsers...]")
+  .action(function(user, otherUsers, options) {
     infoMessage(chalk`add user`);
-    if (!options.organization || !options.user) {
+    const users = otherUsers || [];
+    users.unshift(user);
+
+    if (!options.organization || users.length < 1) {
       errorMessage(chalk`missing parameter`);
       this.help();
       return 1;
     }
-    addUser(defaultConfiguration, options);
+    users.forEach(user => addUser(defaultConfiguration, { user, ...options }));
   })
   .parse(process.argv);
