@@ -1,19 +1,22 @@
 {
-  "name": "Varys",
+  "name": "varys",
   "version": "0.0.1",
-  "description": "Varys",
-  "main": "index.js",
+  "description": "Lord Varys whispers all your Github secrets.",
+  "main": "./lib",
   "scripts": {
     "lint": "yarn standard",
     "lint:fix": "yarn standard --fix",
     "test": "jest src --passWithNoTests",
     "coverage": "jest --coverage src",
-    "varys": "./src/varys.js"
+    "varys": "./bin/varys"
   },
-  "author": "Jeroen Knoops",
+  "author": "Jeroen Knoops <jeroen.knoops@philips.com>",
+  "contributors": [
+    "Marco Franssen <marco.franssen@philips.com> (https://marcofranssen/about)"
+  ],
   "license": "MIT",
   "bin": {
-    "varys": "./src/varys.js"
+    "varys": "./bin/varys"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",

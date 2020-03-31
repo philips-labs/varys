@@ -1,0 +1,23 @@
+#!/usr/bin/env node
+
+"use strict";
+
+const program = require("commander");
+const chalk = require("chalk");
+
+const pkg = require("../package.json");
+const {
+  showRepositories
+} = require("../lib/commands/show-repositories-graphql");
+const { infoMessage } = require("../lib/logger/logger");
+const { defaultConfiguration } = require("../lib/config");
+
+program
+  .version(pkg.version)
+  .description(pkg.description)
+  .action(function(env) {
+    infoMessage(chalk`show repositories`);
+    showRepositories(defaultConfiguration);
+  });
+
+program.parse(process.argv);
