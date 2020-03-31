@@ -16,7 +16,7 @@
     "varys": "./src/varys.js"
   },
   "devDependencies": {
-    "babel-eslint": "^10.0.1",
+    "babel-eslint": "^10.1.0",
     "jest": "^24.1.0"
   },
   "dependencies": {
@@ -26,9 +26,9 @@
     "commander": "^2.19.0",
     "csvtojson": "^2.0.8",
     "fs-extra": "^7.0.1",
-    "inquirer": "^7.0.6",
+    "inquirer": "^7.1.0",
     "slack": "^11.0.2",
-    "standard": "^14.3.1"
+    "standard": "^14.3.3"
   },
   "jest": {
     "collectCoverageFrom": [
