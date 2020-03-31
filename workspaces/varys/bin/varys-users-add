@@ -6,9 +6,11 @@ const program = require("commander");
 const chalk = require("chalk");
 
 const pkg = require("../package.json");
-const { infoMessage, errorMessage } = require("../lib/logger/logger");
-const { addUsers } = require("../lib/commands/add-user-graphql");
-const { defaultConfiguration } = require("../lib/config");
+const {
+  config: { defaultConfiguration },
+  logger: { infoMessage, errorMessage },
+  commands: { addUsers }
+} = require("../lib");
 
 program
   .version(pkg.version)

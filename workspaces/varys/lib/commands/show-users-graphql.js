@@ -1,21 +1,18 @@
-const chalk = require('chalk')
-const { graphql } = require('@octokit/graphql')
+const chalk = require("chalk");
+const { graphql } = require("@octokit/graphql");
 
-const {
-  infoMessage
-} = require('../logger/logger')
+const { infoMessage } = require("../logger");
 
-let token
+let token;
 
 const fetchUsers = async ({ name }) => {
   const graphqlWithAuth = graphql.defaults({
     headers: {
       authorization: `token ${token}`
     }
-  })
+  });
 
-  const query =
-    `
+  const query = `
       query organizationRepositories($owner: String!) {
         organization(login:$owner) {
           membersWithRole {
@@ -26,46 +23,46 @@ const fetchUsers = async ({ name }) => {
           }
         }
       }
-    `
+    `;
 
   try {
-    return await graphqlWithAuth(query, { owner: name })
+    return await graphqlWithAuth(query, { owner: name });
   } catch (error) {
-    console.log('Request failed:', error.request)
-    console.log(error.message)
+    console.log("Request failed:", error.request);
+    console.log(error.message);
   }
-}
+};
 const displayUser = (organizationName, users) => {
-  const assignedUsers = users.membersWithRole.totalCount
-  const pendingUsers = users.pendingMembers.totalCount
-  const total = assignedUsers + pendingUsers
+  const assignedUsers = users.membersWithRole.totalCount;
+  const pendingUsers = users.pendingMembers.totalCount;
+  const total = assignedUsers + pendingUsers;
 
-  console.log(`${organizationName}|${total}|${assignedUsers}|${pendingUsers}`)
-}
+  console.log(`${organizationName}|${total}|${assignedUsers}|${pendingUsers}`);
+};
 
-const display = async (organizations) => {
-  console.log('Organization|# users|# assigned-users|# pending-users')
+const display = async organizations => {
+  console.log("Organization|# users|# assigned-users|# pending-users");
   for (const organization of organizations) {
-    const users = await organization.users.organization
-    displayUser(organization.organizationName, users)
+    const users = await organization.users.organization;
+    displayUser(organization.organizationName, users);
   }
-}
+};
 
-const showUsers = async (config) => {
-  token = config.githubToken
-  const organizations = []
+const showUsers = async config => {
+  token = config.githubToken;
+  const organizations = [];
   for (const organization of config.organizations) {
-    let organizationUsers = []
-    infoMessage(chalk`{blue organization: } ${organization.name}`)
-    organizationUsers = await fetchUsers(organization)
+    let organizationUsers = [];
+    infoMessage(chalk`{blue organization: } ${organization.name}`);
+    organizationUsers = await fetchUsers(organization);
     organizations.push({
       organizationName: organization.name,
       users: organizationUsers
-    })
+    });
   }
-  display(organizations)
-}
+  display(organizations);
+};
 
 module.exports = {
   showUsers
-}
+};

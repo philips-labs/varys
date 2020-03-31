@@ -4,7 +4,7 @@ const inquirer = require("inquirer");
 const { Octokit } = require("@octokit/rest");
 const Slack = require("slack");
 
-const { infoMessage, errorMessage } = require("../logger/logger");
+const { infoMessage, errorMessage } = require("../logger");
 
 let token;
 let slackToken;

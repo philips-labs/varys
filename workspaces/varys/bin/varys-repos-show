@@ -7,10 +7,10 @@ const chalk = require("chalk");
 
 const pkg = require("../package.json");
 const {
-  showRepositories
-} = require("../lib/commands/show-repositories-graphql");
-const { infoMessage } = require("../lib/logger/logger");
-const { defaultConfiguration } = require("../lib/config");
+  config: { defaultConfiguration },
+  logger: { infoMessage },
+  commands: { showRepositories }
+} = require("../lib");
 
 program
   .version(pkg.version)
