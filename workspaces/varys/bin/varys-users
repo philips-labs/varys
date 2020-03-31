@@ -10,7 +10,7 @@ program
   .version(pkg.version)
   .description(pkg.description)
   .command("add <user> [otherUsers]", "adds 1 or multiple users user.")
-  .alias("au")
+  .alias("a")
   .command("show", "shows users.")
-  .alias("su")
+  .alias("s")
   .parse(process.argv);
