@@ -31,20 +31,21 @@ const fetchUsers = async ({ name, token }) => {
     console.log(error.message)
   }
 }
-const displayUser = (organizationName, users) => {
-  const assignedUsers = users.membersWithRole.totalCount
-  const pendingUsers = users.pendingMembers.totalCount
-  const total = assignedUsers + pendingUsers
 
-  console.log(`${organizationName}|${total}|${assignedUsers}|${pendingUsers}`)
-}
+const display = organizations => {
+  const data = organizations.map(org => {
+    const { pendingMembers, membersWithRole } = org.users.organization
+    return {
+      organisation: org.organizationName,
+      get total() {
+        return this.assignedUsers + this.pendingUsers
+      },
+      assignedUsers: membersWithRole.totalCount,
+      pendingUsers: pendingMembers.totalCount
+    }
+  })
 
-const display = async organizations => {
-  console.log('Organization|# users|# assigned-users|# pending-users')
-  for (const organization of organizations) {
-    const users = await organization.users.organization
-    displayUser(organization.organizationName, users)
-  }
+  console.log(columnify(data))
 }
 
 const showUsers = async (config, filterOrgs) => {

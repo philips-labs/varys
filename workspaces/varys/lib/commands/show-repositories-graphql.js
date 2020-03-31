@@ -1,5 +1,6 @@
 const chalk = require('chalk')
 const { graphql } = require('@octokit/graphql')
+const columnify = require('columnify')
 
 const { infoMessage } = require('../logger')
 
@@ -52,24 +53,20 @@ const fetchRepositories = async ({ name, token }) => {
     console.log(error.message)
   }
 }
-const displayRepository = (organizationName, repository) => {
-  console.log(
-    `${organizationName}|${repository.name}|${repository.url}|${
-      repository.isPrivate
-    }|${repository.object && repository.object.history.totalCount}|N/A`
-  )
-}
 
-const displayRepositories = async organizations => {
-  console.log(
-    'organization|reposiitory name|repository url|isPrivate|# commits|# contributors'
+const displayRepositories = organizations => {
+  const data = organizations.flatMap(org =>
+    org.repositories.organization.repositories.nodes.map(repo => ({
+      organisation: org.organizationName,
+      name: repo.name,
+      url: repo.url,
+      private: repo.isPrivate,
+      totalCommits: repo.object && repo.object.history.totalCount,
+      contributors: 'N/A'
+    }))
   )
-  for (const organization of organizations) {
-    const { repositories } = await organization.repositories.organization
-    for (const repository of repositories.nodes) {
-      displayRepository(organization.organizationName, repository)
-    }
-  }
+
+  console.log(columnify(data))
 }
 
 const showRepositories = async (config, filterOrgs) => {

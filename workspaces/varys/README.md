@@ -1,4 +1,4 @@
-## Varys 
+# Varys
 
 ## Description
 
@@ -8,7 +8,7 @@
 bin/varys
 ```
 
-### Supported options:
+### Supported options
 
 | Flag                 | Alias | Functionality
 | ---------------------|:-----:| -------------------------------------
@@ -38,11 +38,11 @@ v organization:  philips-labs
 v organization:  philips-software
 v organization:  philips-test-org
 v organization:  philips-internal
-Organization|# users|# assigned-users|# pending-users
-philips-labs|15|15|0
-philips-software|79|79|0
-philips-test-org|7|7|0
-philips-internal|116|108|8
+ORGANISATION     TOTAL ASSIGNEDUSERS PENDINGUSERS
+philips-labs     15    15            0
+philips-software 79    79            0
+philips-test-org 7     7             0
+philips-internal 117   109           8
 ```
 
 ## Technology stack
