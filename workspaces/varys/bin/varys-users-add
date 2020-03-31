@@ -7,7 +7,7 @@ const chalk = require("chalk");
 
 const pkg = require("../package.json");
 const { infoMessage, errorMessage } = require("../lib/logger/logger");
-const { addUser } = require("../lib/commands/add-user-graphql");
+const { addUsers } = require("../lib/commands/add-user-graphql");
 const { defaultConfiguration } = require("../lib/config");
 
 program
@@ -26,6 +26,6 @@ program
       this.help();
       return 1;
     }
-    users.forEach(user => addUser(defaultConfiguration, { user, ...options }));
+    addUsers(defaultConfiguration, { users, ...options });
   })
   .parse(process.argv);
