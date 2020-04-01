@@ -1,15 +1,11 @@
 const chalk = require('chalk')
-const { graphql } = require('@octokit/graphql')
+const { withAuth } = require('../graphql')
 const columnify = require('columnify')
 
 const { infoMessage } = require('../logger')
 
 const fetchRepositories = async ({ name, token }) => {
-  const graphqlWithAuth = graphql.defaults({
-    headers: {
-      authorization: `token ${token}`
-    }
-  })
+  const graphqlWithAuth = withAuth(token)
 
   const query = `
       query organizationRepositories($owner: String!) {
