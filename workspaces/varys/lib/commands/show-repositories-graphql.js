@@ -1,14 +1,11 @@
 const chalk = require('chalk')
-const { graphql } = require('@octokit/graphql')
+const { withAuth } = require('../graphql')
+const columnify = require('columnify')
 
 const { infoMessage } = require('../logger')
 
 const fetchRepositories = async ({ name, token }) => {
-  const graphqlWithAuth = graphql.defaults({
-    headers: {
-      authorization: `token ${token}`
-    }
-  })
+  const graphqlWithAuth = withAuth(token)
 
   const query = `
       query organizationRepositories($owner: String!) {
@@ -52,29 +49,30 @@ const fetchRepositories = async ({ name, token }) => {
     console.log(error.message)
   }
 }
-const displayRepository = (organizationName, repository) => {
-  console.log(
-    `${organizationName}|${repository.name}|${repository.url}|${
-      repository.isPrivate
-    }|${repository.object && repository.object.history.totalCount}|N/A`
+
+const displayRepositories = organizations => {
+  const data = organizations.flatMap(org =>
+    org.repositories.organization.repositories.nodes.map(repo => ({
+      organisation: org.organizationName,
+      name: repo.name,
+      url: repo.url,
+      private: repo.isPrivate,
+      totalCommits: repo.object && repo.object.history.totalCount,
+      contributors: 'N/A'
+    }))
   )
+
+  console.log(columnify(data))
 }
 
-const displayRepositories = async organizations => {
-  console.log(
-    'organization|reposiitory name|repository url|isPrivate|# commits|# contributors'
-  )
-  for (const organization of organizations) {
-    const { repositories } = await organization.repositories.organization
-    for (const repository of repositories.nodes) {
-      displayRepository(organization.organizationName, repository)
-    }
-  }
-}
-
-const showRepositories = async config => {
+const showRepositories = async (config, filterOrgs) => {
   const organizations = []
-  for (const organization of config.organizations) {
+  const fetchOrgs =
+    filterOrgs.length > 0
+      ? filterOrgs.map(org => ({ name: org }))
+      : config.organizations
+
+  for (const organization of fetchOrgs) {
     let organizationRepositories = []
     infoMessage(chalk`{blue organization: } ${organization.name}`)
     organizationRepositories = await fetchRepositories({

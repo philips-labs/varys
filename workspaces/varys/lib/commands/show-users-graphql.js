@@ -1,16 +1,10 @@
 const chalk = require('chalk')
-const { graphql } = require('@octokit/graphql')
+const columnify = require('columnify')
 
 const { infoMessage } = require('../logger')
 
-let token
-
-const fetchUsers = async ({ name }) => {
-  const graphqlWithAuth = graphql.defaults({
-    headers: {
-      authorization: `token ${token}`
-    }
-  })
+const fetchUsers = async ({ name, token }) => {
+  const graphqlWithAuth = withAuth(token)
 
   const query = `
       query organizationRepositories($owner: String!) {
@@ -32,29 +26,37 @@ const fetchUsers = async ({ name }) => {
     console.log(error.message)
   }
 }
-const displayUser = (organizationName, users) => {
-  const assignedUsers = users.membersWithRole.totalCount
-  const pendingUsers = users.pendingMembers.totalCount
-  const total = assignedUsers + pendingUsers
 
-  console.log(`${organizationName}|${total}|${assignedUsers}|${pendingUsers}`)
+const display = organizations => {
+  const data = organizations.map(org => {
+    const { pendingMembers, membersWithRole } = org.users.organization
+    return {
+      organisation: org.organizationName,
+      get total() {
+        return this.assignedUsers + this.pendingUsers
+      },
+      assignedUsers: membersWithRole.totalCount,
+      pendingUsers: pendingMembers.totalCount
+    }
+  })
+
+  console.log(columnify(data))
 }
 
-const display = async organizations => {
-  console.log('Organization|# users|# assigned-users|# pending-users')
-  for (const organization of organizations) {
-    const users = await organization.users.organization
-    displayUser(organization.organizationName, users)
-  }
-}
-
-const showUsers = async config => {
-  token = config.githubToken
+const showUsers = async (config, filterOrgs) => {
   const organizations = []
-  for (const organization of config.organizations) {
+  const fetchOrgs =
+    filterOrgs.length > 0
+      ? filterOrgs.map(org => ({ name: org }))
+      : config.organizations
+
+  for (const organization of fetchOrgs) {
     let organizationUsers = []
     infoMessage(chalk`{blue organization: } ${organization.name}`)
-    organizationUsers = await fetchUsers(organization)
+    organizationUsers = await fetchUsers({
+      ...organization,
+      token: config.githubToken
+    })
     organizations.push({
       organizationName: organization.name,
       users: organizationUsers

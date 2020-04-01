@@ -1,5 +1,6 @@
 module.exports = {
-  addUsers: require('./add-user-graphql').addUsers,
-  showUsers: require('./show-users-graphql').showUsers,
-  showRepositories: require('./show-repositories-graphql').showRepositories
+  ...require('./add-user-graphql'),
+  ...require('./show-users-graphql'),
+  ...require('./show-repositories-graphql'),
+  ...require('./branch-protection-graphql')
 }

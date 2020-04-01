@@ -29,11 +29,7 @@ const checkOrganization = ({ organizations }, organization) => {
 }
 
 const fetchUser = async (name, organization) => {
-  const graphqlWithAuth = graphql.defaults({
-    headers: {
-      authorization: `token ${token}`
-    }
-  })
+  const graphqlWithAuth = withAuth(token)
 
   const query = `
       query userOrganization($user: String!, $organization: String!) {

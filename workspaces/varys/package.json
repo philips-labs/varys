@@ -26,6 +26,7 @@
     "@octokit/graphql": "^4.3.1",
     "@octokit/rest": "^16.43.1",
     "chalk": "^2.4.2",
+    "columnify": "^1.5.4",
     "commander": "^2.19.0",
     "csvtojson": "^2.0.8",
     "fs-extra": "^7.0.1",

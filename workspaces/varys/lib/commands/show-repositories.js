@@ -1,7 +1,7 @@
 const chalk = require('chalk')
 const { Octokit } = require('@octokit/rest')
 
-const { infoMessage } = require('../logger/logger')
+const { infoMessage } = require('../logger')
 
 const fetchRepositories = async ({ name }) => {
   const octokit = new Octokit()
