@@ -3,25 +3,77 @@
 'use strict'
 
 const program = require('commander')
-const chalk = require('chalk')
+const inquirer = require('inquirer')
 
 const pkg = require('../package.json')
 const {
   config: { defaultConfiguration },
   logger: { infoMessage },
-  commands: { setBranchProtection }
+  commands: { fetchRepositories, setBranchProtection }
 } = require('../lib')
+
+const getRepos = async organization =>
+  (
+    await fetchRepositories({
+      token: defaultConfiguration.githubToken,
+      name: organization.name
+    })
+  ).organization.repositories.nodes.map(repository => ({
+    owner: organization.name,
+    repository: repository.name
+  }))
+
+const listRepos = orgRepos =>
+  orgRepos.map(orgRepo => `${orgRepo.owner}/${orgRepo.repository}`).join('\n')
+
+const confirmProtectPrompt = orgRepos => ({
+  message: `Do you want to protect the master branch for the following repositories?
+${listRepos(orgRepos)}
+`,
+  name: 'proceed',
+  type: 'confirm',
+  default: false
+})
+
+const getAllRepos = async organizations => {
+  const orgs = []
+  for (let org of organizations) {
+    orgs.push(...(await getRepos(org)))
+  }
+  return orgs
+}
+
+const printRepoInfo = ({ owner, repository }) =>
+  infoMessage(`protecting master branch for ${owner}/${repository}`)
 
 program
   .version(pkg.version)
   .description(pkg.description)
-  .arguments('<owner> <repo>')
-  .action(function(owner, repo) {
-    infoMessage(chalk`protect master branch`)
-    setBranchProtection(defaultConfiguration, {
-      owner,
-      repository: repo,
-      branchPattern: 'master'
-    })
+  .arguments('[owner] [repo]')
+  .action(async function(owner, repo) {
+    if (!repo) {
+      infoMessage('fetching repositories')
+      const orgRepos = !owner
+        ? await getAllRepos(defaultConfiguration.organizations)
+        : await getRepos({ name: owner })
+
+      const confirm = await inquirer.prompt(confirmProtectPrompt(orgRepos))
+      if (confirm.proceed) {
+        orgRepos.forEach(orgRepo => {
+          printRepoInfo(orgRepo)
+          setBranchProtection(defaultConfiguration, {
+            ...orgRepo,
+            branchPattern: 'master'
+          })
+        })
+      }
+    } else {
+      const orgRepo = { owner, repository: repo }
+      printRepoInfo(orgRepo)
+      setBranchProtection(defaultConfiguration, {
+        ...orgRepo,
+        branchPattern: 'master'
+      })
+    }
   })
   .parse(process.argv)

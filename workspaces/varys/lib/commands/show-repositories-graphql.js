@@ -88,5 +88,6 @@ const showRepositories = async (config, filterOrgs) => {
 }
 
 module.exports = {
-  showRepositories
+  showRepositories,
+  fetchRepositories
 }
