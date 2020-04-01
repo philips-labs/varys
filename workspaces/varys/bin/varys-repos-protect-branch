@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+
+'use strict'
+
+const program = require('commander')
+const chalk = require('chalk')
+
+const pkg = require('../package.json')
+const {
+  config: { defaultConfiguration },
+  logger: { infoMessage },
+  commands: { setBranchProtection }
+} = require('../lib')
+
+program
+  .version(pkg.version)
+  .description(pkg.description)
+  .arguments('<owner> <repo>')
+  .action(function(owner, repo) {
+    infoMessage(chalk`protect master branch`)
+    setBranchProtection(defaultConfiguration, {
+      owner,
+      repository: repo,
+      branchPattern: 'master'
+    })
+  })
+  .parse(process.argv)

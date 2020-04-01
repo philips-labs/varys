@@ -9,4 +9,8 @@ program
   .version(pkg.version)
   .description(pkg.description)
   .command('show [organizations...]', 'shows repositories.')
+  .command(
+    'protect-branch <owner> <repo>',
+    'protects the repository master branch.'
+  )
   .parse(process.argv)
