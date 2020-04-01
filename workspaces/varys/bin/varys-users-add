@@ -9,7 +9,7 @@ const pkg = require('../package.json')
 const {
   config: { defaultConfiguration },
   logger: { infoMessage, errorMessage },
-  commands: { addUsers },
+  commands: { addUsers }
 } = require('../lib')
 
 program
@@ -17,17 +17,32 @@ program
   .description(pkg.description)
   .option('-o, --organization <organization-name>', 'To which organization')
   .option('-t, --team <team-name>', 'Which team (optional)')
-  .arguments('<user> [otherUsers...]')
-  .action(function(user, otherUsers, options) {
-    infoMessage(chalk`add user`)
-    const users = otherUsers || []
-    users.unshift(user)
+  .arguments('[users...]')
+  .action(function(users, options) {
+    if (stdin.length) {
+      users.push(...stdin.split(/\s+/))
+    }
 
     if (!options.organization || users.length < 1) {
-      errorMessage(chalk`missing parameter`)
+      errorMessage('missing parameter')
       this.help()
       return 1
     }
+    infoMessage(`add following users: ${users.join(', ')}`)
     addUsers(defaultConfiguration, { users, ...options })
   })
-  .parse(process.argv)
+
+let stdin = ''
+if (process.stdin.isTTY) {
+  program.parse(process.argv)
+} else {
+  process.stdin.on('readable', function() {
+    var chunk = this.read()
+    if (chunk !== null) {
+      stdin += chunk
+    }
+  })
+  process.stdin.on('end', function() {
+    program.parse(process.argv)
+  })
+}
