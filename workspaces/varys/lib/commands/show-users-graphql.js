@@ -2,6 +2,7 @@ const chalk = require('chalk')
 const columnify = require('columnify')
 
 const { infoMessage } = require('../logger')
+const { withAuth } = require('../graphql')
 
 const fetchUsers = async ({ name, token }) => {
   const graphqlWithAuth = withAuth(token)

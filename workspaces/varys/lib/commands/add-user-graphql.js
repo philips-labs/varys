@@ -1,9 +1,9 @@
 const chalk = require('chalk')
-const { graphql } = require('@octokit/graphql')
 const inquirer = require('inquirer')
 const { Octokit } = require('@octokit/rest')
 const Slack = require('slack')
 
+const { withAuth } = require('../graphql')
 const { infoMessage, errorMessage } = require('../logger')
 
 let token

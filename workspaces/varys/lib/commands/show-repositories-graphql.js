@@ -1,7 +1,7 @@
 const chalk = require('chalk')
-const { withAuth } = require('../graphql')
 const columnify = require('columnify')
 
+const { withAuth } = require('../graphql')
 const { infoMessage } = require('../logger')
 
 const fetchRepositories = async ({ name, token }) => {
