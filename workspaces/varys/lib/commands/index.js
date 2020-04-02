@@ -1,6 +1,4 @@
-module.exports = {
-  ...require('./add-user-graphql'),
-  ...require('./show-users-graphql'),
-  ...require('./show-repositories-graphql'),
-  ...require('./branch-protection-graphql')
-}
+export * from './add-user-graphql'
+export * from './show-users-graphql'
+export * from './show-repositories-graphql'
+export * from './branch-protection-graphql'

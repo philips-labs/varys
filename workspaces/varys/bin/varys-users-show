@@ -1,16 +1,16 @@
-#!/usr/bin/env node
+#!/bin/sh
+':' //# http://sambal.org/?p=1014 ; exec /usr/bin/env node -r esm "$0" "$@"
 
 'use strict'
 
-const program = require('commander')
-const chalk = require('chalk')
+import program from 'commander'
+import chalk from 'chalk'
 
-const pkg = require('../package.json')
-const {
-  config: { defaultConfiguration },
-  logger: { infoMessage },
-  commands: { showUsers }
-} = require('../lib')
+import pkg from '../package.json'
+
+import { showUsers } from '../lib/commands'
+import { infoMessage } from '../lib/logger'
+import { defaultConfiguration } from '../lib/config'
 
 program
   .version(pkg.version)

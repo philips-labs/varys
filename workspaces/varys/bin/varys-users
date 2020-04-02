@@ -1,9 +1,10 @@
-#!/usr/bin/env node
+#!/bin/sh
+':' //# http://sambal.org/?p=1014 ; exec /usr/bin/env node -r esm "$0" "$@"
 
 'use strict'
 
-const program = require('commander')
-const pkg = require('../package.json')
+import program from 'commander'
+import pkg from '../package.json'
 
 program
   .version(pkg.version)

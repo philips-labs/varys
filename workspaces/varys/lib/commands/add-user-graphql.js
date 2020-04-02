@@ -1,10 +1,10 @@
-const chalk = require('chalk')
-const inquirer = require('inquirer')
-const { Octokit } = require('@octokit/rest')
-const Slack = require('slack')
+import chalk from 'chalk'
+import inquirer from 'inquirer'
+import { Octokit } from '@octokit/rest'
+import Slack from 'slack'
 
-const { withAuth } = require('../graphql')
-const { infoMessage, errorMessage } = require('../logger')
+import { withAuth } from '../graphql'
+import { infoMessage, errorMessage } from '../logger'
 
 let token
 let slackToken
@@ -200,6 +200,4 @@ const addUsers = async (config, { organization, users, team }) => {
   })
 }
 
-module.exports = {
-  addUsers
-}
+export { addUsers }
