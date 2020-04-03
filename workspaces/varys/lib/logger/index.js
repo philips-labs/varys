@@ -1,4 +1,4 @@
-const chalk = require('chalk')
+import chalk from 'chalk'
 
 let verbose = false
 
@@ -29,9 +29,4 @@ const warningMessage = (message, verboseMessage) => {
   }
 }
 
-module.exports = {
-  setVerbose,
-  infoMessage,
-  warningMessage,
-  errorMessage
-}
+export { setVerbose, infoMessage, warningMessage, errorMessage }

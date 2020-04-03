@@ -1,8 +1,8 @@
-const chalk = require('chalk')
-const columnify = require('columnify')
+import chalk from 'chalk'
+import columnify from 'columnify'
 
-const { infoMessage } = require('../logger')
-const { withAuth } = require('../graphql')
+import { infoMessage } from '../logger'
+import { withAuth } from '../graphql'
 
 const fetchUsers = async ({ name, token }) => {
   const graphqlWithAuth = withAuth(token)
@@ -66,6 +66,4 @@ const showUsers = async (config, filterOrgs) => {
   display(organizations)
 }
 
-module.exports = {
-  showUsers
-}
+export { showUsers }

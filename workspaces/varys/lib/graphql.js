@@ -1,10 +1,10 @@
-const { graphql } = require('@octokit/graphql')
+import { graphql } from '@octokit/graphql'
 
-module.exports = {
-  withAuth: token =>
-    graphql.defaults({
-      headers: {
-        authorization: `token ${token}`
-      }
-    })
-}
+const withAuth = token =>
+  graphql.defaults({
+    headers: {
+      authorization: `token ${token}`
+    }
+  })
+
+export { withAuth }

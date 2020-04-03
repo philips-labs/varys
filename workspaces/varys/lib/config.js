@@ -1,3 +1,1 @@
-module.exports = {
-  defaultConfiguration: require('../organizations.json')
-}
+export * as defaultConfiguration from '../organizations.json'

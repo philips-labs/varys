@@ -1,4 +1,4 @@
-const { withAuth } = require('../graphql')
+import { withAuth } from '../graphql'
 
 const getBranchProtectionQuery = `
   query GetBranchProtection($owner: String!, $repository: String!) {
@@ -93,6 +93,4 @@ const setBranchProtection = async (
   }
 }
 
-module.exports = {
-  setBranchProtection
-}
+export { setBranchProtection }

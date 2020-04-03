@@ -1,7 +1,7 @@
-const chalk = require('chalk')
-const { Octokit } = require('@octokit/rest')
+import chalk from 'chalk'
+import { Octokit } from '@octokit/rest'
 
-const { infoMessage } = require('../logger')
+import { infoMessage } from '../logger'
 
 const fetchRepositories = async ({ name }) => {
   const octokit = new Octokit()
