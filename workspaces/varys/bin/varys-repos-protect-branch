@@ -4,28 +4,28 @@
 'use strict'
 
 import program from 'commander'
-import chalk from 'chalk'
+import inquirer from 'inquirer'
 
 import pkg from '../package.json'
 import { fetchRepositories, setBranchProtection } from '../lib/commands'
 import { infoMessage } from '../lib/logger'
 import { defaultConfiguration } from '../lib/config'
 
-const getRepos = async organization =>
+const getRepos = async (organization) =>
   (
     await fetchRepositories({
       token: defaultConfiguration.githubToken,
       name: organization.name
     })
-  ).organization.repositories.nodes.map(repository => ({
+  ).organization.repositories.nodes.map((repository) => ({
     owner: organization.name,
     repository: repository.name
   }))
 
-const listRepos = orgRepos =>
-  orgRepos.map(orgRepo => `${orgRepo.owner}/${orgRepo.repository}`).join('\n')
+const listRepos = (orgRepos) =>
+  orgRepos.map((orgRepo) => `${orgRepo.owner}/${orgRepo.repository}`).join('\n')
 
-const confirmProtectPrompt = orgRepos => ({
+const confirmProtectPrompt = (orgRepos) => ({
   message: `Do you want to protect the master branch for the following repositories?
 ${listRepos(orgRepos)}
 `,
@@ -34,7 +34,7 @@ ${listRepos(orgRepos)}
   default: false
 })
 
-const getAllRepos = async organizations => {
+const getAllRepos = async (organizations) => {
   const orgs = []
   for (let org of organizations) {
     orgs.push(...(await getRepos(org)))
@@ -49,7 +49,7 @@ program
   .version(pkg.version)
   .description(pkg.description)
   .arguments('[owner] [repo]')
-  .action(async function(owner, repo) {
+  .action(async function (owner, repo) {
     if (!repo) {
       infoMessage('fetching repositories')
       const orgRepos = !owner
@@ -58,7 +58,7 @@ program
 
       const confirm = await inquirer.prompt(confirmProtectPrompt(orgRepos))
       if (confirm.proceed) {
-        orgRepos.forEach(orgRepo => {
+        orgRepos.forEach((orgRepo) => {
           printRepoInfo(orgRepo)
           setBranchProtection(defaultConfiguration, {
             ...orgRepo,
