@@ -9,7 +9,5 @@ import pkg from '../package.json'
 program
   .version(pkg.version)
   .description(pkg.description)
-  .command('users', 'whispers secrets about your users.')
-  .command('repos', 'whispers secrets about your repositories.')
-  .command('topics', 'whispers secrets about your topics.')
+  .command('list [organizations...]', 'shows organization topics.')
   .parse(process.argv)
