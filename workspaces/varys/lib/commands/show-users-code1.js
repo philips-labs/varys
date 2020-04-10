@@ -38,16 +38,14 @@ const fetchUsers = async ({ name, token }) => {
 }
 
 const display = organizations => {
-  const data = organizations.map(org => {
-    const { samlIdentityProvider } = org.users.organization
-    samlIdentityProvider.externalIdentities.edges.map(node => {
-      console.log(node)
-    })
-    return {
+  const data = organizations.flatMap(org =>
+    org.users.organization.samlIdentityProvider.externalIdentities.edges.map(edge => ({
       organisation: org.organizationName,
-      code1: samlIdentityProvider.externalIdentities.edges
-    }
-  })
+      userId: edge.node.user && edge.node.user.login,
+      code1: edge.node.samlIdentity.nameId
+    }))
+  )
+  console.log(columnify(data))
 }
 
 const showUsersCode1 = async (config, filterOrgs) => {
