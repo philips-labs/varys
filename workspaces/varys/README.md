@@ -31,7 +31,9 @@ Options:
 Commands:
   users          whispers secrets about your users.
   repos          whispers secrets about your repositories.
+  topics         whispers secrets about your topics.
   help [cmd]     display help for [cmd]
+
 $ bin/varys users show
 v show users
 v organization:  philips-labs

@@ -1,0 +1,24 @@
+#!/bin/sh
+':' //# http://sambal.org/?p=1014 ; exec /usr/bin/env node -r esm "$0" "$@"
+
+'use strict'
+
+import program from 'commander'
+import chalk from 'chalk'
+
+import pkg from '../package.json'
+import { listTopics } from '../lib/commands'
+import { infoMessage, errorMessage } from '../lib/logger'
+import { defaultConfiguration } from '../lib/config'
+
+program
+  .version(pkg.version)
+  .description(pkg.description)
+  .arguments('[organizations...]')
+  .option('-r, --repos', 'show repositories')
+  .action(function(organizations, options) {
+    infoMessage(`Find topics for: ${organizations.join(', ')}`)
+    listTopics({ ...defaultConfiguration, showRepos: options.repos }, organizations)
+  })
+  .parse(process.argv)
+  
