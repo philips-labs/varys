@@ -39,13 +39,14 @@ const fetchUsers = async ({ name, token }) => {
 
 const display = organizations => {
   const data = organizations.flatMap(org =>
+    org.users.organization.samlIdentityProvider &&
     org.users.organization.samlIdentityProvider.externalIdentities.edges.map(edge => ({
       organisation: org.organizationName,
       userId: edge.node.user && edge.node.user.login,
       code1: edge.node.samlIdentity.nameId
     }))
   )
-  console.log(columnify(data))
+  console.log(columnify(data.filter(Boolean)))
 }
 
 const showUsersCode1 = async (config, filterOrgs) => {
