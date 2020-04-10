@@ -13,4 +13,6 @@ program
   .alias('a')
   .command('show', 'shows users.')
   .alias('s')
+  .command('code1', 'shows users code1.')
+  .alias('c')
   .parse(process.argv)

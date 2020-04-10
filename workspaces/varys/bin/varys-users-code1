@@ -1,0 +1,23 @@
+#!/bin/sh
+':' //# http://sambal.org/?p=1014 ; exec /usr/bin/env node -r esm "$0" "$@"
+
+'use strict'
+
+import program from 'commander'
+import chalk from 'chalk'
+
+import pkg from '../package.json'
+
+import { showUsersCode1 } from '../lib/commands'
+import { infoMessage } from '../lib/logger'
+import { defaultConfiguration } from '../lib/config'
+
+program
+  .version(pkg.version)
+  .description(pkg.description)
+  .arguments('[organizations...]')
+  .action(function(organizations) {
+    infoMessage(chalk`show users code1`)
+    showUsersCode1(defaultConfiguration, organizations)
+  })
+  .parse(process.argv)
