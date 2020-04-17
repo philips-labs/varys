@@ -8,7 +8,7 @@ import chalk from 'chalk'
 
 import pkg from '../package.json'
 
-import { showUsers } from '../lib/commands'
+import { showUserSummary } from '../lib/commands'
 import { infoMessage } from '../lib/logger'
 import { defaultConfiguration } from '../lib/config'
 
@@ -18,6 +18,6 @@ program
   .arguments('[organizations...]')
   .action(function(organizations) {
     infoMessage(chalk`show users`)
-    showUsers(defaultConfiguration, organizations)
+    showUserSummary(defaultConfiguration, organizations)
   })
   .parse(process.argv)

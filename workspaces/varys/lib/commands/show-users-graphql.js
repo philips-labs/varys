@@ -74,7 +74,7 @@ const display = (organizations) => {
   console.log(columnify(data))
 }
 
-const showUsers = async (config, filterOrgs) => {
+const showUserSummary = async (config, filterOrgs) => {
   const organizations = []
   const fetchOrgs =
     filterOrgs.length > 0
@@ -133,4 +133,4 @@ const listUsers = async (config, filterOrgs) => {
   displayList(organizations)
 }
 
-export { showUsers, listUsers }
+export { showUserSummary, listUsers }
