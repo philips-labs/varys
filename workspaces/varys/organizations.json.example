@@ -1,5 +1,6 @@
 {
   "githubToken": "<awesome-token-here>",
+  "enterprise": "royal-philips",
   "organizations": [
     { 
       "name": "philips-software", 
