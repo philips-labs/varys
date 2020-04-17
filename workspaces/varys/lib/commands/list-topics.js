@@ -3,6 +3,7 @@ import columnify from 'columnify'
 
 import { withAuth } from '../graphql'
 import { infoMessage } from '../logger'
+import { byKey } from '../data'
 
 const fetchTopics = async ({ name, token }) => {
   const graphqlWithAuth = withAuth(token)
@@ -45,9 +46,6 @@ const groupBy = (collection, key, map) => [
     }, new Map())
     .values()
 ]
-
-const byKey = (key) => (a, b) =>
-  a[key] > b[key] ? 1 : a[key] < b[key] ? -1 : 0
 
 const topicData = (topic) => ({
   topic: topic.topic.name,

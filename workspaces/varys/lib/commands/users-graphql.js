@@ -3,6 +3,7 @@ import columnify from 'columnify'
 
 import { infoMessage } from '../logger'
 import { withAuth } from '../graphql'
+import { byKeys } from '../data'
 
 const queryByOwner = (select) => `
   query organizationRepositories($owner: String!) {
@@ -104,25 +105,35 @@ const showUserSummary = async (config, filterOrgs) => {
 }
 
 const displayList = (enterprises) => {
-  console.dir(
-    enterprises[0].users.enterprise.ownerInfo.samlIdentityProvider
-      .externalIdentities
-  )
-  console.dir(enterprises[0].users.enterprise)
   const data = enterprises.flatMap(
     (enterprise) =>
       enterprise.users.enterprise.ownerInfo.samlIdentityProvider &&
       enterprise.users.enterprise.ownerInfo.samlIdentityProvider.externalIdentities.nodes.map(
         (node) => ({
-          organisation:
+          organization:
             node.user && node.user.organization && node.user.organization.name,
           userId: node.user && node.user.login,
           name: node.user && node.user.name,
+          get lastName() {
+            return this.name && this.name.split(' ').slice(1).join(' ')
+          },
+          get firstName() {
+            return this.name && this.name.split(' ')[0]
+          },
           code1: node.samlIdentity.nameId
         })
       )
   )
-  console.log(columnify(data.filter(Boolean)))
+  console.log(
+    columnify(
+      data
+        .filter((item) => item.organization)
+        .sort(byKeys('lastName', 'firstName')),
+      {
+        columns: ['organization', 'userId', 'name', 'code1']
+      }
+    )
+  )
 }
 
 const listUsers = async (config, filterOrgs) => {
