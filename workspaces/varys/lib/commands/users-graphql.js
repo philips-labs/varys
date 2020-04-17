@@ -11,28 +11,35 @@ const queryByOwner = (select) => `
     }
   }`
 
-const fetchUsers = async ({ name, token }) => {
+const fetchUsers = async ({ enterprise, name, token }) => {
   const graphqlWithAuth = withAuth(token)
 
-  const query = queryByOwner(`
-    samlIdentityProvider {
-      ssoUrl
-      externalIdentities(first: 100) {
-        edges {
-          node {
-            samlIdentity {
-              nameId
-            }
-            user {
-              login
+  const query = `query organizationRepositories($enterprise: String!, $owner: String!) {
+    enterprise(slug: $enterprise){
+      ownerInfo {
+        samlIdentityProvider {
+          ssoUrl
+          externalIdentities(first: 100) {
+            nodes {
+              samlIdentity {
+                nameId
+              }
+              user {
+                login
+                name
+                organization(login: $owner) {
+                  name
+                }
+              }
             }
           }
         }
       }
-    }`)
+    }
+  }`
 
   try {
-    return await graphqlWithAuth(query, { owner: name })
+    return await graphqlWithAuth(query, { enterprise, owner: name })
   } catch (error) {
     console.log('Request failed:', error.request)
     console.log(error.message)
@@ -96,15 +103,22 @@ const showUserSummary = async (config, filterOrgs) => {
   display(organizations)
 }
 
-const displayList = (organizations) => {
-  const data = organizations.flatMap(
-    (org) =>
-      org.users.organization.samlIdentityProvider &&
-      org.users.organization.samlIdentityProvider.externalIdentities.edges.map(
-        (edge) => ({
-          organisation: org.organizationName,
-          userId: edge.node.user && edge.node.user.login,
-          code1: edge.node.samlIdentity.nameId
+const displayList = (enterprises) => {
+  console.dir(
+    enterprises[0].users.enterprise.ownerInfo.samlIdentityProvider
+      .externalIdentities
+  )
+  console.dir(enterprises[0].users.enterprise)
+  const data = enterprises.flatMap(
+    (enterprise) =>
+      enterprise.users.enterprise.ownerInfo.samlIdentityProvider &&
+      enterprise.users.enterprise.ownerInfo.samlIdentityProvider.externalIdentities.nodes.map(
+        (node) => ({
+          organisation:
+            node.user && node.user.organization && node.user.organization.name,
+          userId: node.user && node.user.login,
+          name: node.user && node.user.name,
+          code1: node.samlIdentity.nameId
         })
       )
   )
@@ -122,6 +136,7 @@ const listUsers = async (config, filterOrgs) => {
     let organizationUsers = []
     infoMessage(chalk`{blue organization: } ${organization.name}`)
     organizationUsers = await fetchUsers({
+      enterprise: config.enterprise,
       ...organization,
       token: config.githubToken
     })
