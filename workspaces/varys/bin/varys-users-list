@@ -4,11 +4,10 @@
 'use strict'
 
 import program from 'commander'
-import chalk from 'chalk'
 
 import pkg from '../package.json'
 
-import { showUserSummary } from '../lib/commands'
+import { listUsers } from '../lib/commands'
 import { infoMessage } from '../lib/logger'
 import { defaultConfiguration } from '../lib/config'
 
@@ -16,8 +15,8 @@ program
   .version(pkg.version)
   .description(pkg.description)
   .arguments('[organizations...]')
-  .action(function(organizations) {
-    infoMessage(chalk`show users`)
-    showUserSummary(defaultConfiguration, organizations)
+  .action(function (organizations) {
+    infoMessage('list users')
+    listUsers(defaultConfiguration, organizations)
   })
   .parse(process.argv)
