@@ -1,6 +1,6 @@
 module.exports = {
   projects: [
-    'workspaces/confluenza',
+    'workspaces/varys',
     {
       testMatch: ['<rootDir>/dummy']
     }

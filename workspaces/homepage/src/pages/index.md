@@ -1,6 +1,6 @@
 ---
-path: / 
-title: Varys 
+path: /
+title: Varys
 tag: root
-content: ../../../varys/CONFLUENZA.md
+content: ../../../varys/README.md
 ---
