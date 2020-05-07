@@ -71,7 +71,7 @@ const display = (organizations) => {
     const { pendingMembers, membersWithRole } = org.users.organization
     return {
       organisation: org.organizationName,
-      get total() {
+      get total () {
         return this.assignedUsers + this.pendingUsers
       },
       assignedUsers: membersWithRole.totalCount,
@@ -114,10 +114,10 @@ const displayList = (enterprises) => {
             node.user && node.user.organization && node.user.organization.name,
           userId: node.user && node.user.login,
           name: node.user && node.user.name,
-          get lastName() {
+          get lastName () {
             return this.name && this.name.split(' ').slice(1).join(' ')
           },
-          get firstName() {
+          get firstName () {
             return this.name && this.name.split(' ')[0]
           },
           code1: node.samlIdentity.nameId

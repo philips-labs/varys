@@ -60,7 +60,7 @@ const updateBranchProtection = (token, branchProtectionRuleId, settings) =>
 
 const getRule = (branchProtection, pattern) =>
   branchProtection.repository.branchProtectionRules.nodes.find(
-    rule => rule.pattern == pattern
+    rule => rule.pattern === pattern
   )
 
 const setBranchProtection = async (
