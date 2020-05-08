@@ -12,26 +12,32 @@ const queryByOwner = (select) => `
     }
   }`
 
-const fetchUsers = async ({ enterprise, name, token }) => {
+const fetchUsers = async ({ enterprise, name, token, after }) => {
   const graphqlWithAuth = withAuth(token)
 
-  const query = `query organizationRepositories($enterprise: String!, $owner: String!) {
+  const query = `query organizationRepositories($enterprise: String!, $owner: String!, $after: String) {
     enterprise(slug: $enterprise){
       ownerInfo {
         samlIdentityProvider {
           ssoUrl
-          externalIdentities(first: 100) {
-            nodes {
-              samlIdentity {
-                nameId
-              }
-              user {
-                login
-                name
-                organization(login: $owner) {
+          externalIdentities(first: 100, after: $after) {
+            edges {
+              node {
+                samlIdentity {
+                  nameId
+                }
+                user {
+                  login
                   name
+                  organization(login: $owner) {
+                    name
+                  }
                 }
               }
+            }
+            pageInfo {
+              hasNextPage
+              endCursor
             }
           }
         }
@@ -40,7 +46,7 @@ const fetchUsers = async ({ enterprise, name, token }) => {
   }`
 
   try {
-    return await graphqlWithAuth(query, { enterprise, owner: name })
+    return await graphqlWithAuth(query, { enterprise, owner: name, after })
   } catch (error) {
     console.log('Request failed:', error.request)
     console.log(error.message)
@@ -108,19 +114,13 @@ const displayList = (enterprises) => {
   const data = enterprises.flatMap(
     (enterprise) =>
       enterprise.users.enterprise.ownerInfo.samlIdentityProvider &&
-      enterprise.users.enterprise.ownerInfo.samlIdentityProvider.externalIdentities.nodes.map(
-        (node) => ({
+      enterprise.users.enterprise.ownerInfo.samlIdentityProvider.externalIdentities.edges.map(
+        (edge) => ({
           organization:
-            node.user && node.user.organization && node.user.organization.name,
-          userId: node.user && node.user.login,
-          name: node.user && node.user.name,
-          get lastName () {
-            return this.name && this.name.split(' ').slice(1).join(' ')
-          },
-          get firstName () {
-            return this.name && this.name.split(' ')[0]
-          },
-          code1: node.samlIdentity.nameId
+              edge.node.user && edge.node.user.organization && edge.node.user.organization.name,
+          userId: edge.node.user && edge.node.user.login,
+          name: edge.node.user && edge.node.user.name,
+          code1: edge.node.samlIdentity.nameId
         })
       )
   )
@@ -128,7 +128,7 @@ const displayList = (enterprises) => {
     columnify(
       data
         .filter((item) => item.organization)
-        .sort(byKeys('lastName', 'firstName')),
+        .sort(byKeys('organization', 'userId')),
       {
         columns: ['organization', 'userId', 'name', 'code1']
       }
@@ -136,25 +136,38 @@ const displayList = (enterprises) => {
   )
 }
 
+const organizations = []
+
+const listUsersOnePage = async (config, organization, after) => {
+  let organizationUsers = []
+  organizationUsers = await fetchUsers({
+    enterprise: config.enterprise,
+    ...organization,
+    token: config.githubToken,
+    after: after
+  })
+  organizations.push({
+    organizationName: organization.name,
+    users: organizationUsers
+  })
+
+  return organizationUsers.enterprise.ownerInfo.samlIdentityProvider.externalIdentities.pageInfo.hasNextPage &&
+    organizationUsers.enterprise.ownerInfo.samlIdentityProvider.externalIdentities.pageInfo.endCursor
+}
+
 const listUsers = async (config, filterOrgs) => {
-  const organizations = []
   const fetchOrgs =
     filterOrgs.length > 0
       ? filterOrgs.map((org) => ({ name: org }))
       : config.organizations
 
   for (const organization of fetchOrgs) {
-    let organizationUsers = []
     infoMessage(chalk`{blue organization: } ${organization.name}`)
-    organizationUsers = await fetchUsers({
-      enterprise: config.enterprise,
-      ...organization,
-      token: config.githubToken
-    })
-    organizations.push({
-      organizationName: organization.name,
-      users: organizationUsers
-    })
+    let after = null
+    do {
+      infoMessage('fetching a page..')
+      after = await listUsersOnePage(config, organization, after)
+    } while (after)
   }
   displayList(organizations)
 }
