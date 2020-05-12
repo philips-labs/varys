@@ -30,7 +30,7 @@
     "@octokit/rest": "^17.9.0",
     "chalk": "^4.0.0",
     "columnify": "^1.5.4",
-    "commander": "^2.19.0",
+    "commander": "^5.1.0",
     "csvtojson": "^2.0.8",
     "esm": "^3.2.25",
     "fs-extra": "^7.0.1",
