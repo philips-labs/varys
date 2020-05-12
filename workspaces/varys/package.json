@@ -26,8 +26,8 @@
     "jest": "^24.1.0"
   },
   "dependencies": {
-    "@octokit/graphql": "^4.3.1",
-    "@octokit/rest": "^16.43.1",
+    "@octokit/graphql": "^4.4.0",
+    "@octokit/rest": "^17.9.0",
     "chalk": "^2.4.2",
     "columnify": "^1.5.4",
     "commander": "^2.19.0",
