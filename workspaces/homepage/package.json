@@ -20,7 +20,7 @@
     "gatsby-plugin-emotion": "^4.1.18",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-helmet": "^5.2.1",
+    "react-helmet": "^6.0.0",
     "react-media": "^1.9.2"
   },
   "devDependencies": {
