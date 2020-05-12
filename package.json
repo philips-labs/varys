@@ -11,7 +11,7 @@
     "babel-jest": "^26.0.1",
     "babel-plugin-emotion": "^10.0.15",
     "eslint": "^7.0.0",
-    "eslint-plugin-react-hooks": "^2.3.0",
+    "eslint-plugin-react-hooks": "^4.0.0",
     "gatsby": "^2.18.11",
     "gzip-size": "^5.1.1",
     "jest": "^26.0.1",
