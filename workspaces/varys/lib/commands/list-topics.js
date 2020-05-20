@@ -8,6 +8,8 @@ import { byKey } from '../data'
 const fetchTopics = async ({ name, token }) => {
   const graphqlWithAuth = withAuth(token)
 
+  // TODO Use cursor to loop to all repositories
+  // TODO Use cursor to loop to all repositoryTopics
   const query = `query GetTopics($owner: String!) {
     organization(login: $owner) {
       repositories(first: 100) {
