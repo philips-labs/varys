@@ -7,6 +7,7 @@ import { infoMessage } from '../logger'
 const fetchRepositories = async ({ name, token }) => {
   const graphqlWithAuth = withAuth(token)
 
+  // TODO Use cursor to loop to all repositories
   const query = `
       query organizationRepositories($owner: String!) {
         organization(login:$owner) {
