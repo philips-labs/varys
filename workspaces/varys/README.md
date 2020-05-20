@@ -2,6 +2,21 @@
 
 ## Description
 
+## Configuration
+
+Create a file `organizations.json` with information about your organization.
+Example configuration: [organizations.json.example](./organizations.json.example)
+
+### Configuration
+
+| key             | description                          |
+| --------------- | ------------------------------------ |
+| `githubToken`   | GitHub token                         |
+| `enterprise`    | Enterprise organization, for SSO     |
+| `organizations` | Array with organizations             |
+| `slackToken`    | Slack Token                          |
+| `slackChannel`  | Slack Channel                        |
+
 ## Usage
 
 ```bash
