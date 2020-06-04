@@ -77,7 +77,7 @@ const display = (organizations) => {
     const { pendingMembers, membersWithRole } = org.users.organization
     return {
       organisation: org.organizationName,
-      get total () {
+      get total() {
         return this.assignedUsers + this.pendingUsers
       },
       assignedUsers: membersWithRole.totalCount,
@@ -117,7 +117,9 @@ const displayList = (enterprises) => {
       enterprise.users.enterprise.ownerInfo.samlIdentityProvider.externalIdentities.edges.map(
         (edge) => ({
           organization:
-              edge.node.user && edge.node.user.organization && edge.node.user.organization.name,
+            edge.node.user &&
+            edge.node.user.organization &&
+            edge.node.user.organization.name,
           userId: edge.node.user && edge.node.user.login,
           name: edge.node.user && edge.node.user.name,
           code1: edge.node.samlIdentity.nameId
@@ -151,8 +153,10 @@ const listUsersOnePage = async (config, organization, after) => {
     users: organizationUsers
   })
 
-  return organizationUsers.enterprise.ownerInfo.samlIdentityProvider.externalIdentities.pageInfo.hasNextPage &&
-    organizationUsers.enterprise.ownerInfo.samlIdentityProvider.externalIdentities.pageInfo.endCursor
+  const pageInfo =
+    organizationUsers.enterprise.ownerInfo.samlIdentityProvider
+      .externalIdentities.pageInfo
+  return pageInfo.hasNextPage && pageInfo.endCursor
 }
 
 const listUsers = async (config, filterOrgs) => {
@@ -163,6 +167,7 @@ const listUsers = async (config, filterOrgs) => {
 
   for (const organization of fetchOrgs) {
     infoMessage(chalk`{blue organization: } ${organization.name}`)
+
     let after = null
     do {
       infoMessage('fetching a page..')

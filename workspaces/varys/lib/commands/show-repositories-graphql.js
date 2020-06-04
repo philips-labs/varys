@@ -4,15 +4,18 @@ import columnify from 'columnify'
 import { withAuth } from '../graphql'
 import { infoMessage } from '../logger'
 
-const fetchRepositories = async ({ name, token }) => {
+const fetchRepositories = async ({ name, token, after }) => {
   const graphqlWithAuth = withAuth(token)
 
-  // TODO Use cursor to loop to all repositories
   const query = `
-      query organizationRepositories($owner: String!) {
+      query organizationRepositories($owner: String!, $after: String) {
         organization(login:$owner) {
-          repositories(first: 100) {
+          repositories(first: 100, after: $after) {
             totalCount
+            pageInfo {
+              hasNextPage
+              endCursor
+            }
             nodes {
               name
               id
@@ -44,16 +47,16 @@ const fetchRepositories = async ({ name, token }) => {
     `
 
   try {
-    return await graphqlWithAuth(query, { owner: name })
+    return await graphqlWithAuth(query, { owner: name, after })
   } catch (error) {
     console.log('Request failed:', error.request)
     console.log(error.message)
   }
 }
 
-const displayRepositories = organizations => {
-  const data = organizations.flatMap(org =>
-    org.repositories.organization.repositories.nodes.map(repo => ({
+const displayRepositories = (organizations) => {
+  const data = organizations.flatMap((org) =>
+    org.repositories.organization.repositories.nodes.map((repo) => ({
       organisation: org.organizationName,
       name: repo.name,
       url: repo.url,
@@ -66,24 +69,38 @@ const displayRepositories = organizations => {
   console.log(columnify(data))
 }
 
+const organizations = []
+
+const listReposOnePage = async (config, organization, after) => {
+  let organizationRepositories = await fetchRepositories({
+    enterprise: config.enterprise,
+    ...organization,
+    token: config.githubToken,
+    after: after
+  })
+  organizations.push({
+    organizationName: organization.name,
+    repositories: organizationRepositories
+  })
+
+  const pageInfo = organizationRepositories.organization.repositories.pageInfo
+  return pageInfo.hasNextPage && pageInfo.endCursor
+}
+
 const showRepositories = async (config, filterOrgs) => {
-  const organizations = []
   const fetchOrgs =
     filterOrgs.length > 0
-      ? filterOrgs.map(org => ({ name: org }))
+      ? filterOrgs.map((org) => ({ name: org }))
       : config.organizations
 
   for (const organization of fetchOrgs) {
-    let organizationRepositories = []
     infoMessage(chalk`{blue organization: } ${organization.name}`)
-    organizationRepositories = await fetchRepositories({
-      ...organization,
-      token: config.githubToken
-    })
-    organizations.push({
-      organizationName: organization.name,
-      repositories: organizationRepositories
-    })
+
+    let after = null
+    do {
+      infoMessage('fetching a page..')
+      after = await listReposOnePage(config, organization, after)
+    } while (after)
   }
   displayRepositories(organizations)
 }
