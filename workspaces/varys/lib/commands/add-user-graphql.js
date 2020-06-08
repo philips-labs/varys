@@ -8,6 +8,7 @@ import { infoMessage, errorMessage } from '../logger'
 
 let token
 let slackToken
+let slackChannel
 
 const checkOrganization = ({ organizations }, organization) => {
   for (const ourOrganization of organizations) {
@@ -155,6 +156,7 @@ const processAction = async (username, organization) => {
   infoMessage(
     chalk`Add ${chalk.yellow(username)} to ${chalk.green(organization)}`
   )
+
   const octokit = new Octokit({
     auth: token
   })
@@ -168,18 +170,23 @@ const processAction = async (username, organization) => {
     chalk`Added ${chalk.yellow(username)} to ${chalk.green(organization)}`
   )
 
-  const bot = new Slack(slackToken)
-  await bot.chat.postMessage({
-    channel: '#royal-philips',
-    text: `Added *${username}* to *${organization}*`,
-    token: slackToken
-  })
+  if (!slackToken || !slackChannel) {
+    infoMessage(chalk`Missing mandatory slack parameters so no slack message today!`)
+  } else {
+    const bot = new Slack(slackToken)
+    await bot.chat.postMessage({
+      channel: slackChannel,
+      text: `Added *${username}* to *${organization}*`,
+      token: slackToken
+    })
+  }
   console.log(data)
 }
 
 const addUsers = async (config, { organization, users, team }) => {
   token = config.githubToken
   slackToken = config.slackToken
+  slackChannel = config.slackChannel
 
   team = team || ''
 

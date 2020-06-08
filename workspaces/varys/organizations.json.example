@@ -1,13 +1,13 @@
 {
   "githubToken": "<awesome-token-here>",
-  "enterprise": "royal-philips",
+  "enterprise": "<enterprise-organization-name>",
   "organizations": [
-    { 
-      "name": "philips-software", 
-      "id": 12321 
+    {
+      "name": "philips-software"
     },
-    { "name": "philips-labs", 
-      "id": 12323 
+    { "name": "philips-labs"
     }
-  ]
+  ],
+  "slackToken": "<slackToken>",
+  "slackChannel": "#varys-channel"
 }
