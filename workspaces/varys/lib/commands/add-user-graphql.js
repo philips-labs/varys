@@ -18,7 +18,7 @@ const checkOrganization = ({ organizations }, organization) => {
           organization
         )}) is part of our organizations!`
       )
-      return
+      return ourOrganization.team || ''
     }
   }
   errorMessage(
@@ -121,16 +121,11 @@ const checkAlreadyInvited = async (username, organization) => {
 
 const checkBlocked = async (username, organization) => {
   infoMessage(chalk`checkBlocked not implemented yet`)
-
   // const { data } = await octokit.orgs.checkBlockedUser({
   //  org: organization,
   //  username: username
   // });
   // console.log(data)
-}
-
-const checkTeam = (team, organization) => {
-  infoMessage(chalk`Team not implemented yet`)
 }
 
 const confirmAdd = () => {
@@ -152,20 +147,77 @@ const verify = async () => {
   }
 }
 
-const processAction = async (username, organization) => {
+const getUserId = async (username) => {
+  const octokit = new Octokit({
+    auth: token
+  })
+
+  // Get userId from username
+  let userData = await octokit.users.getByUsername({
+      username
+  });
+
+  userData = userData.data
+  return userData.id
+}
+
+const getTeamId = async (team, organization) => {
+  const octokit = new Octokit({
+    auth: token
+  })
+
+  let teamData
+  try {
+    teamData = await octokit.teams.getByName({
+      org: organization,
+      team_slug: team,
+    });
+  } catch (error) {
+    console.log(error.message)
+    errorMessage(chalk`Team ${chalk.yellow(team)} is unknown.`)
+    process.exit(1)
+  }
+
+  if (teamData && teamData.data) {
+    return teamData.data.id
+  } else {
+    errorMessage(chalk`Team ${chalk.yellow(team)} is unknown.`)
+    process.exit(1)
+  }
+}
+
+const inviteUser = async (username, organization, team) => {
   infoMessage(
     chalk`Add ${chalk.yellow(username)} to ${chalk.green(organization)}`
   )
+
+  let payload = {
+    org: organization,
+    invitee_id: await getUserId(username),
+    role: 'direct_member'
+  }
+
+  if (team != '') {
+    infoMessage(
+      chalk`Add default team: ${chalk.yellow(team)}`
+    )
+
+    payload = {
+      ...payload,
+      team_ids: [await getTeamId(team, organization)]
+    }
+  } else {
+    infoMessage(
+      chalk`No default team`
+    )
+  }
 
   const octokit = new Octokit({
     auth: token
   })
 
-  const { data } = await octokit.orgs.addOrUpdateMembership({
-    org: organization,
-    username: username,
-    role: 'member'
-  })
+  const { data } = await octokit.orgs.createInvitation(payload)
+
   infoMessage(
     chalk`Added ${chalk.yellow(username)} to ${chalk.green(organization)}`
   )
@@ -183,27 +235,25 @@ const processAction = async (username, organization) => {
   console.log(data)
 }
 
-const addUsers = async (config, { organization, users, team }) => {
+const addUsers = async (config, { organization, users }) => {
   token = config.githubToken
   slackToken = config.slackToken
   slackChannel = config.slackChannel
 
-  team = team || ''
-
   users.forEach(async user => {
+    const team = checkOrganization(config, organization)
+
     infoMessage(
       chalk`Add user for: ${chalk.green(organization)} / ${chalk.yellow(
         user
       )} / ${chalk.yellow(team)}`
     )
 
-    checkOrganization(config, organization)
     await checkUser(user, organization)
     await checkAlreadyInvited(user, organization)
     await checkBlocked(user, organization)
-    checkTeam(team, organization)
     await verify()
-    await processAction(user, organization)
+    await inviteUser(user, organization, team)
   })
 }
 
