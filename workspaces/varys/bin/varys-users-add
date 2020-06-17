@@ -15,7 +15,6 @@ program
   .version(pkg.version)
   .description(pkg.description)
   .option('-o, --organization <organization-name>', 'To which organization')
-  .option('-t, --team <team-name>', 'Which team (optional)')
   .arguments('[users...]')
   .action(function(users, options) {
     if (stdin.length) {

@@ -5,7 +5,9 @@
     {
       "name": "philips-software"
     },
-    { "name": "philips-labs"
+    {
+      "name": "philips-labs",
+      "team": "innersource"
     }
   ],
   "slackToken": "<slackToken>",
