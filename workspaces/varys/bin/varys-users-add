@@ -15,6 +15,7 @@ program
   .version(pkg.version)
   .description(pkg.description)
   .option('-o, --organization <organization-name>', 'To which organization')
+  .option('-e, --email', 'Use email address instead of username')
   .arguments('[users...]')
   .action(function(users, options) {
     if (stdin.length) {
@@ -25,6 +26,9 @@ program
       errorMessage('missing parameter')
       this.help()
       return 1
+    }
+    if (!options.email) {
+      options.email = false
     }
     infoMessage(`add following users: ${users.join(', ')}`)
     addUsers(defaultConfiguration, { users, ...options })

@@ -186,15 +186,29 @@ const getTeamId = async (team, organization) => {
   }
 }
 
-const inviteUser = async (username, organization, team) => {
+const inviteUser = async (username, organization, team, email) => {
   infoMessage(
     chalk`Add ${chalk.yellow(username)} to ${chalk.green(organization)}`
   )
 
   let payload = {
     org: organization,
-    invitee_id: await getUserId(username),
     role: 'direct_member'
+  }
+
+  if (!email) {
+    payload = {
+      ...payload,
+      invitee_id: await getUserId(username)
+    }
+  } else {
+    infoMessage(
+      chalk`Add user with email: ${chalk.yellow(username)}`
+    )
+    payload = {
+      ...payload,
+      email: username
+    }
   }
 
   if (team != '') {
@@ -235,7 +249,7 @@ const inviteUser = async (username, organization, team) => {
   console.log(data)
 }
 
-const addUsers = async (config, { organization, users }) => {
+const addUsers = async (config, { organization, users, email }) => {
   token = config.githubToken
   slackToken = config.slackToken
   slackChannel = config.slackChannel
@@ -249,11 +263,15 @@ const addUsers = async (config, { organization, users }) => {
       )} / ${chalk.yellow(team)}`
     )
 
-    await checkUser(user, organization)
-    await checkAlreadyInvited(user, organization)
-    await checkBlocked(user, organization)
+    if (!email) {
+      await checkUser(user, organization)
+      await checkAlreadyInvited(user, organization)
+      await checkBlocked(user, organization)
+    } else {
+      infoMessage(chalk`You're using an email address, so no additional checks are performed`)
+    }
     await verify()
-    await inviteUser(user, organization, team)
+    await inviteUser(user, organization, team, email)
   })
 }
 
