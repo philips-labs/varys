@@ -10,6 +10,13 @@
       "team": "innersource"
     }
   ],
-  "slackToken": "<slackToken>",
-  "slackChannel": "#varys-channel"
+  "slack" : {
+    "token": "<slackToken>",
+    "slackChannel": "#varys-channel"
+  },
+  "ldap" : {
+    "uri" : "<uri>",
+    "base" : "<base>",
+    "bindDN" : "bindDN",
+    "password" : "password"
 }

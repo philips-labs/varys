@@ -4,6 +4,7 @@ import columnify from 'columnify'
 import { infoMessage } from '../logger'
 import { withAuth } from '../graphql'
 import { byKeys } from '../data'
+import { userLDAP } from '../ldap'
 
 const queryByOwner = (select) => `
   query organizationRepositories($owner: String!) {
@@ -110,8 +111,8 @@ const showUserSummary = async (config, filterOrgs) => {
   display(organizations)
 }
 
-const displayList = (enterprises) => {
-  const data = enterprises.flatMap(
+const flattenUserList = (enterprises) => {
+  return enterprises.flatMap(
     (enterprise) =>
       enterprise.users.enterprise.ownerInfo.samlIdentityProvider &&
       enterprise.users.enterprise.ownerInfo.samlIdentityProvider.externalIdentities.edges.map(
@@ -126,13 +127,24 @@ const displayList = (enterprises) => {
         })
       )
   )
+}
+
+const addLDAPStatus = (userlist, config) => {
+  return userlist.map(v => ({...v, ldap: userLDAP(v.code1, config)}))
+}
+
+const displayList = (organizations, config, options) => {
+  let userlist = flattenUserList(organizations)
+  if (options.ldap) {
+    userlist = addLDAPStatus(userlist, config)
+  }
   console.log(
     columnify(
-      data
+      userlist
         .filter((item) => item.organization)
         .sort(byKeys('organization', 'userId')),
       {
-        columns: ['organization', 'userId', 'name', 'code1']
+        columns: ['userId', 'code1', 'ldap', 'organization', 'name']
       }
     )
   )
@@ -159,13 +171,13 @@ const listUsersOnePage = async (config, organization, after) => {
   return pageInfo.hasNextPage && pageInfo.endCursor
 }
 
-const listUsers = async (config, filterOrgs) => {
+const listUsers = async (config, filterOrgs, options) => {
   const fetchOrgs =
     filterOrgs.length > 0
       ? filterOrgs.map((org) => ({ name: org }))
       : config.organizations
 
-  for (const organization of fetchOrgs) {
+  for (let organization of fetchOrgs) {
     infoMessage(chalk`{blue organization: } ${organization.name}`)
 
     let after = null
@@ -174,7 +186,7 @@ const listUsers = async (config, filterOrgs) => {
       after = await listUsersOnePage(config, organization, after)
     } while (after)
   }
-  displayList(organizations)
+  displayList(organizations, config, options)
 }
 
 export { showUserSummary, listUsers }

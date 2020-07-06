@@ -251,8 +251,8 @@ const inviteUser = async (username, organization, team, email) => {
 
 const addUsers = async (config, { organization, users, email }) => {
   token = config.githubToken
-  slackToken = config.slackToken
-  slackChannel = config.slackChannel
+  slackToken = config.slack.token
+  slackChannel = config.slack.channel
 
   users.forEach(async user => {
     const team = checkOrganization(config, organization)

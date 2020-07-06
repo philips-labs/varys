@@ -14,9 +14,10 @@ import { defaultConfiguration } from '../lib/config'
 program
   .version(pkg.version)
   .description(pkg.description)
+  .option('-l, --ldap', 'check ldap')
   .arguments('[organizations...]')
-  .action(function (organizations) {
+  .action(function (organizations, options) {
     infoMessage('list users')
-    listUsers(defaultConfiguration, organizations)
+    listUsers(defaultConfiguration, organizations, options)
   })
   .parse(process.argv)
