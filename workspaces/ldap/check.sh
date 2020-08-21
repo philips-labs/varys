@@ -36,7 +36,9 @@ checkUser() {
 
   echo "$ldapresult" | grep 'sAMAccountName:' > /dev/null
   if [ $? -eq 0 ]; then
-    if [ "$(showExtensionAttribute14)" -eq "0" ]; then
+    disabled=$(showExtensionAttribute14)
+    # Functional accounts do not have the disabled attribute 14 set.
+    if [ -z $disabled ] || [ "$disabled" -eq "0" ]; then
       echo $1 >> ${OUTPUT_DIR}/users-valid.txt
       echo "$(showAccount),$(showMail),$(showExtensionAttribute15),$(showDepartment)" >> ${OUTPUT_DIR}/users-valid-ldap-results.txt
     else
