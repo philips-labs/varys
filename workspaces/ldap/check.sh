@@ -18,6 +18,12 @@ showDepartment() {
   echo "$ldapresult" | grep -o 'department:[^,]\+' | grep -o '[^:]\+$'
 }
 
+# Disabled
+showExtensionAttribute14() {
+  echo "$ldapresult" | grep -o 'extensionAttribute14:[^,]\+' | grep -o '[^:]\+$'
+}
+
+# Cost Center
 showExtensionAttribute15() {
   echo "$ldapresult" | grep -o 'extensionAttribute15:[^,]\+' | grep -o '[^:]\+$'
 }
@@ -26,12 +32,17 @@ showExtensionAttribute15() {
 checkUser() {
   FILTER="(sAMAccountName=$1)"
 
-  ldapresult=$(ldapsearch -x -D ${BIND_DN} -w ${PASSWORD}  -H ${URI} -b ${BASE} ${FILTER} -LLL sAMAccountName extensionAttribute15 mail department)
+  ldapresult=$(ldapsearch -x -D ${BIND_DN} -w ${PASSWORD}  -H ${URI} -b ${BASE} ${FILTER} -LLL sAMAccountName extensionAttribute14 extensionAttribute15 mail department)
+
   echo "$ldapresult" | grep 'sAMAccountName:' > /dev/null
   if [ $? -eq 0 ]; then
-    echo $1 >> ${OUTPUT_DIR}/users-valid.txt
-    #echo "$ldapresult" | grep -o 'mail:[^,]\+' | grep -o '[^:]\+$' >> ${OUTPUT_DIR}/users-valid-ldap-results.txt
-    echo "$(showAccount),$(showMail),$(showExtensionAttribute15),$(showDepartment)" >> ${OUTPUT_DIR}/users-valid-ldap-results.txt
+    if [ "$(showExtensionAttribute14)" -eq "0" ]; then
+      echo $1 >> ${OUTPUT_DIR}/users-valid.txt
+      echo "$(showAccount),$(showMail),$(showExtensionAttribute15),$(showDepartment)" >> ${OUTPUT_DIR}/users-valid-ldap-results.txt
+    else
+      echo Account User $1 is disabled.
+      echo $1 >> ${OUTPUT_DIR}/user-no-valid.txt
+    fi
   else
     echo User $1 NOT found.
     echo $1 >> ${OUTPUT_DIR}/user-no-valid.txt
