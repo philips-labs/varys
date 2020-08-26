@@ -39,22 +39,21 @@ checkUser() {
     disabled=$(showExtensionAttribute14)
     # Functional accounts do not have the disabled attribute 14 set.
     if [ -z $disabled ] || [ "$disabled" -eq "0" ]; then
-      echo $1 >> ${OUTPUT_DIR}/users-valid.txt
-      echo "$(showAccount),$(showMail),$(showExtensionAttribute15),$(showDepartment)" >> ${OUTPUT_DIR}/users-valid-ldap-results.txt
+      echo "$(showAccount),$(showMail),$(showExtensionAttribute15),$(showDepartment), $2" >> ${OUTPUT_DIR}/users-valid.txt
     else
-      echo Account User $1 is disabled.
-      echo $1 >> ${OUTPUT_DIR}/user-no-valid.txt
+      echo Account User $1 / $2 / $(showMail) is disabled.
+      echo $1, $2 >> ${OUTPUT_DIR}/user-no-valid.txt
     fi
   else
-    echo User $1 NOT found.
-    echo $1 >> ${OUTPUT_DIR}/user-no-valid.txt
+    echo User $1 / $2 NOT found.
+    echo $1, $2 >> ${OUTPUT_DIR}/user-no-valid.txt
   fi
 }
 
 checkUserFile() {
   while IFS=" " read -r USERID CODE1
   do
-    checkUser $CODE1
+    checkUser $CODE1 $USERID
   done < <(cat $1 | sed '1,/USERID/d')
 }
 
