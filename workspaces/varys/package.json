@@ -22,7 +22,7 @@
     "@octokit/rest": "^17.9.0",
     "chalk": "^4.0.0",
     "columnify": "^1.5.4",
-    "commander": "^5.1.0",
+    "commander": "^6.2.1",
     "csvtojson": "^2.0.8",
     "esm": "^3.2.25",
     "fs-extra": "^9.0.0",
