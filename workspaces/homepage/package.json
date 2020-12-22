@@ -12,26 +12,20 @@
     "node": ">=12.0.0"
   },
   "dependencies": {
-    "@confluenza/gatsby-theme-confluenza": "^1.0.18",
-    "@emotion/core": "^10.0.15",
-    "@emotion/styled": "^10.0.15",
-    "gatsby": "^2.21.23",
-    "gatsby-plugin-catch-links": "^2.1.21",
-    "gatsby-plugin-emotion": "^4.1.18",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-helmet": "^6.0.0",
+    "@confluenza/gatsby-theme-confluenza": "^1.0.25",
+    "@emotion/react": "^11.1.1",
+    "@emotion/styled": "^11.0.0",
+    "gatsby": "^2.27.1",
+    "gatsby-plugin-catch-links": "^2.5.0",
+    "gatsby-plugin-emotion": "^5.1.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-helmet": "^6.1.0",
     "react-media": "^1.9.2"
   },
   "devDependencies": {
-    "babel-eslint": "^10.0.2",
-    "babel-plugin-emotion": "^10.0.15",
-    "eslint": "^7.0.0",
-    "eslint-config-react-app": "^5.1.0",
-    "eslint-plugin-react-hooks": "^4.0.0",
-    "gatsby-cli": "^2.12.17",
-    "gatsby-plugin-root-import": "^2.0.5",
-    "jest-emotion": "^10.0.26"
+    "gatsby-cli": "^2.14.0",
+    "gatsby-plugin-root-import": "^2.0.5"
   },
   "keywords": [
     "gatsby",
@@ -41,9 +35,8 @@
   "license": "MIT",
   "main": "n/a",
   "scripts": {
+    "install:vercel": "rm ../../package.json && mv ../../yarn.lock . && yarn",
     "build": "gatsby build",
-    "clean": "gatsby clean",
-    "now-build": "(cd ../../ && yarn build) && yarn build",
     "develop": "gatsby develop",
     "format": "prettier --trailing-comma es5 --no-semi --single-quote --write \"src/**/*.js\"",
     "test": "echo \"Error: no test specified\" && exit 1"

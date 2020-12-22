@@ -33,27 +33,28 @@ function setupPresets (babelEnv) {
 
   return [
     presetEnv,
-    '@babel/preset-react',
-    '@emotion/babel-preset-css-prop'
+    [
+      '@babel/preset-react',
+      { runtime: 'automatic', importSource: '@emotion/react' }
+    ]
   ]
 }
 
 function setupPlugins (babelEnv) {
-  if (babelEnv === 'test') {
-    return [
-      [
-        'emotion',
-        { sourceMap: true, autoLabel: true }
-      ],
-      '@babel/plugin-proposal-object-rest-spread',
-      '@babel/plugin-proposal-class-properties'
-    ]
-  } else {
-    return [
-      '@babel/plugin-proposal-object-rest-spread',
-      '@babel/plugin-proposal-class-properties'
-    ]
-  }
+  return [
+    [
+      '@emotion',
+      {
+        // sourceMap is on by default but source maps are dead code eliminated in production
+        sourceMap: true,
+        autoLabel: 'dev-only',
+        labelFormat: '[local]',
+        cssPropOptimization: true
+      }
+    ],
+    '@babel/plugin-proposal-object-rest-spread',
+    '@babel/plugin-proposal-class-properties'
+  ]
 }
 
 function setupIgnoredFiles (babelEnv) {
