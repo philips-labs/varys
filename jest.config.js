@@ -6,6 +6,6 @@ module.exports = {
     }
   ],
   collectCoverage: true,
-  collectCoverageFrom: ['source/**.js', '!**/*.test.js', '!**/node_modules/**'],
+  collectCoverageFrom: ['lib/**.js', 'source/**.js', '!**/*.test.js', '!**/node_modules/**', '!**/bin/**'],
   coverageReporters: ['text-summary', 'lcov']
 }
