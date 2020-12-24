@@ -7,10 +7,6 @@
   "description": "Lord Varys whispers all your Github secrets.",
   "main": "./lib",
   "scripts": {
-    "lint": "yarn standard",
-    "lint:fix": "yarn standard --fix",
-    "test": "jest src --passWithNoTests",
-    "coverage": "jest --coverage src",
     "varys": "./bin/varys"
   },
   "author": "Jeroen Knoops <jeroen.knoops@philips.com>",
@@ -21,50 +17,17 @@
   "bin": {
     "varys": "./bin/varys"
   },
-  "devDependencies": {
-    "babel-eslint": "^10.1.0",
-    "jest": "^26.0.1"
-  },
   "dependencies": {
     "@octokit/graphql": "^4.4.0",
-    "@octokit/rest": "^17.9.0",
+    "@octokit/rest": "^18.0.12",
     "chalk": "^4.0.0",
     "columnify": "^1.5.4",
-    "commander": "^5.1.0",
+    "commander": "^6.2.1",
     "csvtojson": "^2.0.8",
     "esm": "^3.2.25",
     "fs-extra": "^9.0.0",
     "inquirer": "^7.1.0",
-    "slack": "^11.0.2",
-    "standard": "^14.3.4"
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**.js",
-      "src/**/*.js",
-      "!<rootDir>/node_modules/",
-      "!<rootDir>/src/cli-varys.js",
-      "!**/*.test.js"
-    ],
-    "setupFilesAfterEnv": [
-      "<rootDir>/setupTests.js"
-    ],
-    "coverageReporters": [
-      "text-summary",
-      "lcov"
-    ]
-  },
-  "standard": {
-    "parser": "babel-eslint",
-    "ignore": [
-      "**/node_modules/**",
-      "**/public/**"
-    ],
-    "envs": [
-      "es6",
-      "browser",
-      "jest"
-    ]
+    "slack": "^11.0.2"
   },
   "keywords": [
     "github"
