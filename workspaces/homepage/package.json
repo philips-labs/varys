@@ -15,7 +15,7 @@
     "@confluenza/gatsby-theme-confluenza": "^1.0.25",
     "@emotion/react": "^11.1.1",
     "@emotion/styled": "^11.0.0",
-    "gatsby": "^2.27.1",
+    "gatsby": "^4.25.7",
     "gatsby-plugin-catch-links": "^2.5.0",
     "gatsby-plugin-emotion": "^5.1.0",
     "react": "^17.0.1",
